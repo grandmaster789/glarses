@@ -1,5 +1,5 @@
-//
-// Created by mail on 25-Sep-22.
-//
-
 #include "glarses.h"
+
+int square(int x) {
+    return x * x;
+}
