@@ -5,7 +5,11 @@
 int main() {
     std::cout << "Launching\n";
 
-    std::cout << square(5) << '\n';
+    using namespace glarses;
+    {
+        Window win;
+        win.run();
+    }
 
     std::cout << "Done\n";
 }
