@@ -1,5 +1,6 @@
 #include "window.h"
 #include "dependencies.h"
+#include "cube.h"
 
 #include <stdexcept>
 #include <iostream>
@@ -61,13 +62,14 @@ namespace glarses {
 
 		glfwMakeContextCurrent(m_Handle);
 
+		glfwSetInputMode(m_Handle, GLFW_STICKY_KEYS, GL_TRUE); // buffer the keypresses
+
+		glewExperimental = true; // this is actually required for glew to try and get openGL core functions
 		auto glew_err = glewInit();
 		if (glew_err != GLEW_OK) {
 			std::cerr << glewGetErrorString(glew_err) << '\n';
 			throw std::runtime_error("Failed to initialize GLEW");
 		}
-
-
 	}
 
 	Window::~Window() {
@@ -77,12 +79,20 @@ namespace glarses {
 	void Window::run() {
 		glClearColor(0.2f, 0.0f, 0.4f, 0.0f); // purple
 
-		while (!glfwWindowShouldClose(m_Handle)) {
-			glClear(GL_COLOR_BUFFER_BIT);
+		glEnable(GL_DEPTH_TEST);
+		glDepthFunc(GL_LESS);
+
+		bool done = false;
+
+		while (!done) {
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 			glfwSwapBuffers(m_Handle);
 
 			glfwPollEvents();
+
+			done |= (glfwWindowShouldClose(m_Handle) == GL_TRUE);          // someone closed the window
+			done |= (glfwGetKey(m_Handle, GLFW_KEY_ESCAPE) == GLFW_PRESS); // someone pressed escape
 		}
 	}
 }
