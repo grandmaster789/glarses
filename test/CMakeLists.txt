@@ -8,7 +8,7 @@ add_executable(
 
   "unittest.h"
   "unittest.cpp"
-)
+ "io/test_file.cpp" "util/test_string.cpp")
 
 include_directories(../glarses)
 

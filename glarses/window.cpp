@@ -1,6 +1,7 @@
 #include "window.h"
 #include "dependencies.h"
 #include "cube.h"
+#include "io/file.h"
 
 #include <stdexcept>
 #include <iostream>
@@ -46,7 +47,7 @@ namespace glarses {
 		// set up an openGL 4.3 window with the Core profile
 		glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 		m_Handle = glfwCreateWindow(
@@ -61,6 +62,7 @@ namespace glarses {
 			throw std::runtime_error("Failed to create a window");
 
 		glfwMakeContextCurrent(m_Handle);
+		glfwSwapInterval(1); // wait for 1 screen update before swapping front/back buffers (vsync)
 
 		glfwSetInputMode(m_Handle, GLFW_STICKY_KEYS, GL_TRUE); // buffer the keypresses
 

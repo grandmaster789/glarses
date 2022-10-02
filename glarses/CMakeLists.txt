@@ -2,7 +2,7 @@ add_library(glarses_lib
 	"glarses.cpp"
 	"window.h" 
 	"window.cpp"
- "dependencies.h" "dependencies.cpp"  "cube.h" "shader_program.h" "cube.cpp")
+ "dependencies.h" "dependencies.cpp"  "cube.h" "shader_program.h" "cube.cpp" "io/file.h" "io/file.cpp" "util/string.h" "util/string.cpp")
 
 find_package(fmt CONFIG REQUIRED)
 find_package(OpenGL REQUIRED)

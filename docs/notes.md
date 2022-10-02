@@ -13,6 +13,10 @@ Project setup was done in Visual Studio 2022 Community; it's CMake based, and sh
 
 The project uses VCPKG as a package manager in manifest mode, which should auto-install when running CMake. It's a local version, so it should not interfere with other projects on the system.
 
+We have a choice between openGL and directX interfacing - I'm more familiar with openGL so I'm going with that. 
+
+The current version of openGL is 4.6, although not too many people make use of that (probably because of apple and/or webGL). Using this version pretty much requires making use of an extension loader.
+
 # Unity SDK analysis
 The plugin seems to be compressed in a .tar.gz type blob, simple enough to extract everything.
 Maybe it would be nice to include a tool to decompress everything and rename it to their internal asset filenames.
