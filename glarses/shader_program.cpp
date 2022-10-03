@@ -70,17 +70,47 @@ ShaderProgram ShaderProgram::load_from_memory(
 
 	std::cout << "Compiling \"" << vtx_shader_source_name << "\"\n";
 	glCompileShader(result.m_VertexShader);
+	
+	GLint vtx_status = 0;
+	
+	glGetShaderiv(result.m_VertexShader, GL_COMPILE_STATUS, &vtx_status);
+	
+	if (vtx_status != GL_TRUE) {
+		GLchar message[1024] = {};
+		glGetShaderInfoLog(result.m_VertexShader, sizeof(message), nullptr, message);
+
+		std::cerr << "Vertex shader compilation failed: " << message << "\n";
+	}
 
 	std::cout << "Compiling \"" << frag_shader_source_name << "\"\n";
 	glCompileShader(result.m_FragmentShader);
+	
+	GLint frag_status = 0;
+	
+	glGetShaderiv(result.m_FragmentShader, GL_COMPILE_STATUS, &frag_status);
 
-	// TODO -- report compilation issues etc
+	if (frag_status != GL_TRUE) {
+		GLchar message[1024] = {};
+		glGetShaderInfoLog(result.m_FragmentShader, sizeof(message), nullptr, message);
+
+		std::cerr << "Fragment shader compilation failed: " << message << "\n";
+	}
+
 	std::cout << "Linking\n";
 	glAttachShader(result.m_ShaderProgram, result.m_VertexShader);
 	glAttachShader(result.m_ShaderProgram, result.m_FragmentShader);
 	glLinkProgram(result.m_ShaderProgram);
 
-	// TODO -- report linking issues etc
+	GLint link_status = 0;
+	
+	glGetProgramiv(result.m_ShaderProgram, GL_LINK_STATUS, &link_status);
+	
+	if (link_status != GL_TRUE) {
+		GLchar message[1024] = {};
+		glGetProgramInfoLog(result.m_ShaderProgram, sizeof(message), nullptr, message);
+
+		std::cerr << "Linking shaders failed: " << message << "\n";
+	}
 
 	return result;
 }

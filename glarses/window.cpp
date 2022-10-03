@@ -59,7 +59,7 @@ namespace glarses {
 		if (!glfwInit())
 			throw std::runtime_error("Failed to initialize GLFW");
 
-		// set up an openGL 4.3 window with the Core profile
+		// set up an openGL 4.6 window with the Core profile
 		glfwWindowHint(GLFW_CLIENT_API,            GLFW_OPENGL_API);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
@@ -99,8 +99,7 @@ namespace glarses {
 		m_PerFrameBuffer = UniformBuffer::create<glm::mat4>(0);
 
 		m_Texture = Texture::load_file(assets / "textures" / "debug_color_02.png");
-		
-
+		//m_Texture.bind(0);
 	}
 
 	Window::~Window() {
@@ -109,6 +108,9 @@ namespace glarses {
 
 	void Window::run() {
 		glClearColor(0.2f, 0.0f, 0.4f, 0.0f); // purple
+		glEnable(GL_DEPTH_TEST);
+		glFrontFace(GL_CCW);
+		glEnable(GL_CULL_FACE);
 
 		bool done = false;
 
