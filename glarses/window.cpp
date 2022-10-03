@@ -60,10 +60,11 @@ namespace glarses {
 			throw std::runtime_error("Failed to initialize GLFW");
 
 		// set up an openGL 4.3 window with the Core profile
-		glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);
+		glfwWindowHint(GLFW_CLIENT_API,            GLFW_OPENGL_API);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
-		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+		glfwWindowHint(GLFW_OPENGL_PROFILE,        GLFW_OPENGL_CORE_PROFILE);
+		glfwWindowHint(GLFW_SRGB_CAPABLE,          GL_TRUE); // enable sRGB
 
 		m_Handle = glfwCreateWindow(
 			800,		// width
@@ -97,8 +98,9 @@ namespace glarses {
 
 		m_PerFrameBuffer = UniformBuffer::create<glm::mat4>(0);
 
-		m_Texture = Texture::load_file(assets / "textures" / "test_pattern_2x2.png");
-		m_Texture.bind(0);
+		m_Texture = Texture::load_file(assets / "textures" / "debug_color_02.png");
+		
+
 	}
 
 	Window::~Window() {

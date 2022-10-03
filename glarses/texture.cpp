@@ -7,7 +7,9 @@ Texture::~Texture() {
 }
 
 Texture::Texture(Texture&& t) noexcept:
-	m_Handle(t.m_Handle)
+	m_Handle(t.m_Handle),
+	m_Width (t.m_Width),
+	m_Height(t.m_Height)
 {
 	t.m_Handle = 0;
 }
@@ -17,6 +19,8 @@ Texture& Texture::operator = (Texture&& t) noexcept {
 		glDeleteTextures(1, &m_Handle);
 
 	m_Handle = t.m_Handle;
+	m_Width  = t.m_Width;
+	m_Height = t.m_Height;
 
 	t.m_Handle = 0;
 
@@ -62,6 +66,8 @@ Texture Texture::load_file(const std::filesystem::path& p) {
 	Texture result;
 
 	result.m_Handle = handle;
+	result.m_Width  = w;
+	result.m_Height = h;
 
 	return result;
 }
@@ -91,4 +97,16 @@ Texture Texture::load_raw_data(
 
 void Texture::bind(GLuint sampler_location) const {
 	glBindTextures(sampler_location, 1, &m_Handle); // https://docs.gl/gl4/glBindTexture
+}
+
+GLuint Texture::get_handle() const {
+	return m_Handle;
+}
+
+int Texture::get_width() const {
+	return m_Width;
+}
+
+int Texture::get_height() const {
+	return m_Height;
 }

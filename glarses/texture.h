@@ -30,6 +30,14 @@ public:
 
 	void bind(GLuint sampler_location) const;
 
+	GLuint get_handle() const;
+
+	int get_width() const;
+	int get_height() const;
+
 private:
 	GLuint m_Handle = 0;
+
+	int    m_Width  = 0;
+	int    m_Height = 0;
 };
