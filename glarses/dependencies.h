@@ -25,6 +25,14 @@
 
 #include <iosfwd>
 
+// Tilt5 NDK
+#pragma warning(push)
+	#pragma warning(disable: 4267) // conversion from 'size_t' to 'uint16_t/uint8_t', possible loss of data
+	#pragma warning(disable: 4244) // 'argument': conversion from '_Rep' to 'uint32_t', possible loss of data
+	
+	#include <TiltFiveNative.hpp>
+#pragma warning(pop)
+
 // additional ostream operators for glm
 namespace glm {
 	std::ostream& operator << (std::ostream& os, const vec2& v);

@@ -6,6 +6,8 @@
 #include "texture.h"
 #include "uniform_buffer.h"
 
+#include "t5/t5_context.h"
+
 namespace glarses {
 	// kind of sloppy design - probably should separate various context interactions from the window, but hey... 
 	// just don't create multiple windows and you'll be fine (very basic guards are in place)
@@ -30,5 +32,7 @@ namespace glarses {
 		ShaderProgram m_ShaderProgram;
 		Texture       m_Texture;
 		UniformBuffer m_PerFrameBuffer;
+
+		t5::Context m_Context;
 	};
 }

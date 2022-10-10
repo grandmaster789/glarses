@@ -3,6 +3,8 @@
 #include "cube.h"
 #include "io/file.h"
 
+#include "t5/t5_context.h"
+
 #include <stdexcept>
 #include <iostream>
 #include <array>
@@ -29,6 +31,18 @@ namespace {
 
 	void glfw_error_callback(int code, const char* description) {
 		std::cerr << "GLFW error (" << intepret_glfw_errorcode(code) << "): " << description << '\n';
+	}
+
+	void GLAPIENTRY opengl_debug_callback(
+		GLenum,          // source
+		GLenum,          // type
+		GLuint,          // id
+		GLenum,          // severity
+		GLsizei,         // message size
+		GLchar* message,    
+		const void*      // userParam
+	) {
+		std::cerr << "OpenGL debug message: " << message << '\n';
 	}
 
 	std::filesystem::path find_asset_folder() {
@@ -89,6 +103,24 @@ namespace glarses {
 			throw std::runtime_error("Failed to initialize GLEW");
 		}
 
+		// after extensions are enabled we can enable debug callbacks
+#ifdef _DEBUG
+		glDebugMessageCallbackARB(reinterpret_cast<GLDEBUGPROCARB>(opengl_debug_callback), nullptr);
+		if (glGetError() != GL_NO_ERROR)
+			std::cerr << "glDebugMessageCallbackARB failure\n";
+
+		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS_ARB);
+		
+		// disable the 'notification' severity
+		glDebugMessageControlARB(
+			GL_DONT_CARE,	        		// source
+			GL_DONT_CARE,					// type
+			GL_DEBUG_SEVERITY_NOTIFICATION,	// severity
+			0,								// count
+			nullptr,						// GLuint *ids
+			GL_FALSE						// enabled
+		);
+#endif
 		auto assets = find_asset_folder();
 
 		m_ShaderProgram = load_shader_sources(

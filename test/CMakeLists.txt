@@ -8,7 +8,9 @@ add_executable(
 
   "unittest.h"
   "unittest.cpp"
- "io/test_file.cpp" "util/test_string.cpp")
+  "io/test_file.cpp" 
+  "util/test_string.cpp"
+)
 
 include_directories(../glarses)
 
@@ -19,3 +21,10 @@ target_link_libraries(
 )
 
 catch_discover_tests(unittest)
+
+# this figures out all of the required dll's and copies everything to the output folder
+add_custom_command(TARGET unittest POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_RUNTIME_DLLS:unittest> $<TARGET_FILE_DIR:unittest>
+  COMMAND_EXPAND_LISTS
+)
+

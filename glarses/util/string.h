@@ -28,6 +28,7 @@ namespace util {
 	template <typename... Ts>
 	[[nodiscard]] std::string stringify(const Ts&... args); 
 
+	// NOTE these again assume ASCII-style strings, unicode is a lot more complicated
 	[[nodiscard]] constexpr bool is_upper     (char c) noexcept; // A-Z
 	[[nodiscard]] constexpr bool is_lower     (char c) noexcept; // a-z
 	[[nodiscard]] constexpr bool is_alpha     (char c) noexcept; // A-Z  || a-z

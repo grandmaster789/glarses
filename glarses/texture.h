@@ -9,7 +9,8 @@
 // very basic wrapper; should cover just the most common use case
 // (always loads as RGB8 texture, no mipmaps)
 // -- not particularily efficient or flexible, but easy to use
-// 
+// -- should probably add bindless methods here
+//
 class Texture {
 public:
 	Texture() = default;
