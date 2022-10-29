@@ -12,7 +12,7 @@ add_executable(
   "util/test_string.cpp"
 )
 
-include_directories(../glarses)
+target_include_directories(unittest PUBLIC ../glarses)
 
 target_link_libraries(
   unittest PRIVATE
@@ -23,8 +23,7 @@ target_link_libraries(
 catch_discover_tests(unittest)
 
 # this figures out all of the required dll's and copies everything to the output folder
-add_custom_command(TARGET unittest POST_BUILD
+add_custom_command(TARGET unittest PRE_BUILD
   COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_RUNTIME_DLLS:unittest> $<TARGET_FILE_DIR:unittest>
   COMMAND_EXPAND_LISTS
 )
-

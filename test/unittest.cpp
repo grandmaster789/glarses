@@ -5,6 +5,6 @@ namespace test {
 	TEST_CASE("square", "dummy") {
 		int x = square(5);
 
-		REQUIRE(x == 25);
+		REQUIRE(x == 25); 
 	}
 }

@@ -6,7 +6,7 @@
 #include "texture.h"
 #include "uniform_buffer.h"
 
-#include "t5/t5_context.h"
+#include "t5/t5_manager.h"
 
 namespace glarses {
 	// kind of sloppy design - probably should separate various context interactions from the window, but hey... 
@@ -33,6 +33,6 @@ namespace glarses {
 		Texture       m_Texture;
 		UniformBuffer m_PerFrameBuffer;
 
-		t5::Context m_Context;
+		t5::Manager m_Tilt;
 	};
 }

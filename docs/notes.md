@@ -28,6 +28,8 @@ The streams shown in the viewer are not currently exposed in the NDK, after aski
 
 After a cursory look at which libraries are used by SimpleViewer, it seems to me that this program doesn't use the NDK at all but raw USB commands.
 
+I asked about direct access to the video streams, and it seems that it'll be something that may become possible in the future but not right now. The cited reason is that they want to prevent unauthorized access - presumably it's a privacy thing. This is, after all, a device where it's not immediately obvious that cameras are integrated.
+
 # NDK 
 Seems like it's been designed as a C style library (probably for better compatibility). There are two 'sample' projects included that indicate intended usage. The samples don't seem to actually render anything to the glasses, I'll have to figure that out from the unity SDK I guess.
 
@@ -37,3 +39,12 @@ Eventually ever frame should end up calling t5SendFrameToGlasses; both left and 
 
 The T5_FrameInfo struct suggests to me that we should render into two textures, and then submit both.
 
+The C++ sample code seems to be very much inspired by Rust, weirdly combined with shared_ptr. I consider it fairly good code, could be better of course but not bad. It's not so bad that I should write my own versions of the same operations, I'll just add some notes and it should be ok enough to use.
+
+Because the code was written in a very Rust-like style, the generated html documentation is not quite ideal. There also seems to be quite a bit of GCC standard library documentation in there for some reason.
+
+# Gameboard
+All positions and orientations are relative to a gameboard, which is selected in the Tilt5 service. I'm fairly certain that at this point this part of the experience cannot be customized. Once I have a decent demo working, I'll have to ask in Discord what's up with that.
+
+# Object tracking
+At this point, there is no support for tracking objects other than the glasses themselves and the wands. The camera that is supposed to be used for this purpose does not have any bindings and the NDK exposes nothing on this subject.

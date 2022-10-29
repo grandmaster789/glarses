@@ -18,9 +18,9 @@ add_library(glarses_lib
 	"uniform_buffer.cpp" 
 	"render_target.h"   
 	"render_target.cpp" 
-	"index_buffer.h" 
-	"t5/t5_context.h" 
-	"t5/t5_context.cpp"
+	"index_buffer.h"  
+	"t5/t5_manager.h" 
+	"t5/t5_manager.cpp"
 )
 
 find_package(fmt CONFIG REQUIRED)

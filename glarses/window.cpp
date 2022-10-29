@@ -3,8 +3,6 @@
 #include "cube.h"
 #include "io/file.h"
 
-#include "t5/t5_context.h"
-
 #include <stdexcept>
 #include <iostream>
 #include <array>

@@ -1,0 +1,141 @@
+# T5 NDK overview
+
+I'm manually documenting the public interface for the C++ part. Plaintext works better than markdown for this.
+Almost all public function alls are wrapped in Results, which necessitate either continual unwrapping or pretty heavy-handed error checking at every stage.
+Let's just roll with it for now, eventually there's probably a more reasonable way that allows to focus on the happy path.
+Also - pose estimation is relative to a game board, the NDK currently doesn't seem to allow custom tracked objects...
+
+// ---------------- Client ---------------------------- :82
+
+Result<std::shared_ptr<Client>> obtainClient(
+  const std::string& applicationID,      // e.g. "com.tiltfive.test", "com.grandmaster.glarses"
+  const std::string& applicationVersion  // e.g. "0.0.1" or "1.0.0"
+);
+
+class Client {
+public:
+	Result<std::vector<std::string>>   listGlasses();                           // e.g. { "XXXX-XXXX-XXXX-XXXX", "YYYY-YYYY-YYYY-YYYY" }
+	Result<std::string>                getServiceVersion();                     // e.g. "0.12.3"
+	Result<std::vector<T5_ParamSys>>   getChagedParams();                       // changed since the last time this was called (not the new values though)
+	
+	Result<bool>                       isTiltFiveUiRequestingAttention();       // for things like firmware upgrade, connectivity problems etc.
+	
+	Result<T5_GameboardSize>           getGameboardSize(T5_GameboardType type); // .. needs to be combined with a query as to what gameboard is selected in the service
+
+	[[nodiscard]]
+	std::unique_ptr<ParamChangeHelper> createParamChangeHelper(
+		std::weak_ptr<ParamChangeListener> listener,
+		std::chrono::milliseconds          poll_interval = 100ms
+	);
+};
+
+std::ostream& operator << (std::ostream& os, const std::shared_ptr<Client>& instance);
+std::ostream& operator << (std::ostream& os, const                 Client & instance);
+
+
+// ---------------- Glasses ---------------------------- :319
+
+Result<std::shared_ptr<Glasses> obtainGlasses(
+	const std::string&             identifier,
+	const std::shared_ptr<Client>& client
+);
+
+class Glasses {
+public:
+	// non-exclusive operations:
+
+	[[nodiscard]]
+	std::string                              getIdentifier() const;                     // hardware ID for the glasses; may not be stable between sessions
+										     					                        
+	Result<ConnectionState>                  getConnectionState();                      // kNotExclusivelyConnected / kReserved / kConnected / kDisconnected
+	Result<std::vector<T5_ParamGlasses>>     getChangedParams();                        // since last called (values of changed parameters are *not* included)
+	Result<double>                           getIpd();                                  // e.g. 
+	Result<std::string>                      getFriendlyName();                         // may be changed by the user during a session, should not be used as a key
+										     										   
+	Result<void>                             acquire(const std::string& displayName);   // ? where can I get the display name? acquire exclusive operational state
+	Result<void>                             ensureReady();                             // on failure, yields Error::kTryAgain
+	Result<void>                             release();                                 // release previously-acquired glasses
+										     
+	Result<void>                             initGraphicsContext(
+										     	T5_GraphicsApi graphicsApi,             // openGL/directX
+										     	void*          graphicsContext          // ?
+										     );
+										     
+	// exclusive operations:			     
+	Result<T5_GlassesPose>                   getLatestGlassesPose();                    // relative to the associated gameboard e.g. { u64(timestamp), Vec3(position), Quat(orientation), gameboardType }
+	Result<void>                             sendFrame(const T5_FrameInfo* const info); // 
+										     
+	// wand-related						     
+	Result<std::vector<T5_WandHandle>>       listWands();                               // 
+	Result<void>                             configureWandStream(                       //
+	                                            const T5_WandStreamConfig* config
+                                             );
+	Result<T5_WandStreamEvent>               readWandStream( 
+		                                        std::chrono::milliseconds timeout       // defaults to 100ms
+	                                         );
+	std::shared_ptr<WandStreamHelper>        getWandStreamHelper();                     // 
+	std::unique_ptr<GlassesConnectionHelper> createConnectionHelper(
+	                                            const std::string& displayName,
+												std::chrono::milliseconds poll_interval // defaults to 100ms
+	                                         );
+};
+
+std::ostream& operator << (std::ostream& os, const std::shared_ptr<Glasses>& glasses);
+std::ostream& operator << (std::ostream& os, const                 Glasses & glasses);
+
+// ----------------- GlassesConnectionHelper --------------------- :699
+
+// This starts a separate thread that manages the connection to the glasses
+class GlassesConnectionHelper {
+public:
+	[[nodiscard]]
+	Glasses&        glasses();
+
+	Result<void>    awaitConnection();                                   // blocks until a connection is established
+	Result<void>    awaitConnection(std::chrono::milliseconds timeout);  // variant that may timeout
+	
+	std::error_code consumeLastAsyncError();                             // the connection process may produce errors asynchronously
+};
+
+// ----------------- WandStreamHelper ----------------------- :858
+
+// maintains a separate thread for reading streams from all wands (one thread for all wands)
+
+class WandStreamHelper {
+public:
+	Result<std::vector<std::shared_ptr<Wand>>> listWands();              // lists wands, realizes Wand objects
+
+	std::error_code consumeLastAsyncError();                             // the stream may produce error asynchronously
+};
+
+// ----------------- ParamChangeListener --------------------- :1064
+// pure virtual, implementation is user-specific
+// does not report the new values, just which parameters changed
+class ParamChangeListener {
+public:
+	virtual void onSysParamChanged    (                                         const std::vector<T5_ParamSys>& changed) = 0;
+	virtual void onGlassesParamChanged(const std::shared_ptr<Glasses>& glasses, const std::vector<T5_ParamSys>& changed) = 0;
+};
+
+
+// ----------------- ParamChangeHelper --------------------- :1082
+// track changes to parameters (both system-wide and glasses-related)
+// one thread for all parameters
+// to actually use this, create a listener and hook it up via Client::createParamChangeHelper()
+class ParamChangeHelper {
+public:
+	void registerGlasses  (const std::shared_ptr<Glasses>& glasses);
+	void deregisterGlasses(const std::shared_ptr<Glasses>& glasses);
+
+	std::error_code consumeLastAsyncError(); // checking may produce errors asynchronously
+};
+
+// ----------------- Wand --------------------------- :1242
+// represents a Wand, should be used with a WandStreamHelper
+class Wand {
+public:
+	Result<T5_WandReport> getLatestReport() const;
+
+	[[nodiscard]]
+	T5_WandHandle handle() const;
+};
