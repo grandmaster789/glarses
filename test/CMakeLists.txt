@@ -10,6 +10,7 @@ add_executable(
   "unittest.cpp"
   "io/test_file.cpp" 
   "util/test_string.cpp"
+  "math/test_transform.cpp"
 )
 
 target_include_directories(unittest PUBLIC ../glarses)

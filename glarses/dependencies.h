@@ -13,11 +13,9 @@
 #define GLM_FORCE_RADIANS
 #define GLM_META_PROG_HELPERS
 	#include <glm/glm.hpp>
-	#include <glm/gtc/matrix_transform.hpp>
-	#include <glm/gtc/quaternion.hpp>
-	#include <glm/gtc/type_ptr.hpp>
-	#include <glm/gtx/transform2.hpp>
 	#include <glm/ext.hpp>
+	#include <glm/gtx/quaternion.hpp>
+	#include <glm/gtx/transform.hpp>
 #undef GLM_META_PROG_HELPERS
 #undef GLM_FORCE_RADIANS
 
