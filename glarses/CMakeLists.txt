@@ -21,7 +21,7 @@ add_library(glarses_lib
 	"index_buffer.h"  
 	"t5/t5_manager.h" 
 	"t5/t5_manager.cpp"
- "math/transform.h" "math/transform.cpp" "util/flat_map.h" "util/mediator.h" "util/detail/mediator_queue.h" "util/algorithm.h")
+ "math/transform.h" "math/transform.cpp" "util/flat_map.h" "util/mediator.h" "util/detail/mediator_queue.h" "util/algorithm.h"   "t5/t5_client.h" "t5/t5_client.cpp" "t5/t5_glasses.h" "t5/t5_glasses.cpp" "t5/t5_gameboard.h" "t5/t5_gameboard.cpp")
 
 find_package(fmt CONFIG REQUIRED)
 find_package(OpenGL REQUIRED)

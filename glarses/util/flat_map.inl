@@ -122,7 +122,7 @@ namespace util {
 		if (it == std::end(m_Keys))
 			std::cout << "Key not found\n";
 		else {
-			auto idx = std::distance(std::begin(m_Keys), it);
+			auto idx = std::distance(std::cbegin(m_Keys), it);
 			m_Keys.erase(it);
 			m_Values.erase(std::begin(m_Values) + idx);
 		}

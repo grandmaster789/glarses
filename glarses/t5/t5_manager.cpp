@@ -1,5 +1,6 @@
 #include "t5_manager.h"
 #include "../util/mediator.h"
+#include "../util/algorithm.h"
 #include <chrono>
 
 namespace t5 {
@@ -14,7 +15,13 @@ namespace t5 {
 	}
 
 	Manager::~Manager() {
-		m_Exiting = true;
+		m_LookupGlasses.clear();
+
+		m_Exiting = true;	
+	}
+
+	const std::string& Manager::get_application_id() const {
+		return m_ApplicationID;
 	}
 
 	void Manager::init_client() {
@@ -32,13 +39,7 @@ namespace t5 {
 				break;
 			}
 
-			if (x.error().value() == T5_TIMEOUT) {
-				std::cout << ".";
-				std::this_thread::sleep_for(100ms);
-				continue;
-			}
-
-			std::cerr << "Client connection error: " <<  x.error() << '\n';
+			std::cerr << "Client connection error: " << x.error() << '\n';
 			break;
 		}
 
@@ -51,9 +52,16 @@ namespace t5 {
 				if (x) {
 					version = std::move(*x);
 					break;
-				}			
-
-				std::this_thread::sleep_for(100ms);
+				}
+				else if (x.error() == tiltfive::Error::kNoService) {
+					// NOTE for some reason, the first call typically fails with a NoService error...
+					std::this_thread::sleep_for(m_ServicePollingInterval);
+					continue;
+				}
+				else {
+				 	std::cerr << "Client getServiceVersion error: " << x << '\n';
+					break;
+				}
 			}
 
 			std::cout << "TiltFive Client connected: " << version << '\n';
@@ -62,66 +70,100 @@ namespace t5 {
 
 	void Manager::loop_poll() {
 		while (!m_Exiting) {
-			update_glasses_lookup(); // notify additions/removals/re-connection of glasses
-
-			// 
+			update_glasses_list(); // notify additions/removals/re-connection of glasses
+			make_connections_exclusive();
 
 			using namespace std::chrono_literals;
-			std::this_thread::sleep_for(100ms);
+			std::this_thread::sleep_for(m_GlassesPollingInterval);
 		}
+
+		release_connections();
 	}
 
-	void Manager::update_glasses_lookup() {
+	void Manager::update_glasses_list() {
 		auto wrapped_current_list = m_Client->listGlasses();
 
 		if (wrapped_current_list) {
 			auto current_list = *wrapped_current_list;
 
-			// check known glasses against the list, notify removals
-			auto known_ids = m_LookupGlasses.get_keys();
+			// figure out if theres a new one
+			const auto& known_keys = m_LookupGlasses.get_keys();
 
-			for (const auto& id : known_ids) {
-				if (!util::contains(current_list, id)) {
-					// if it wasn't in a disconnected state yet, do so now and notify
-					if (m_LookupGlasses[id]->get()) {
-						m_LookupGlasses[id]->reset();
-						std::cout << "Glasses disconnected: " << id << '\n';
-						util::broadcast(GlassesDisconnected{ id });
-					}
-				}
-			}
-
-			// check for new glasses / reconnections
-			for (const auto& current_id : current_list) {
-				if (m_LookupGlasses.contains(current_id)) {
-					if (!*m_LookupGlasses[current_id]) {
-						// reconnection case
-						auto wrapped_glasses = tiltfive::obtainGlasses(current_id, m_Client);
-
-						if (wrapped_glasses) {
-							m_LookupGlasses.assign(current_id, *wrapped_glasses);
-							std::cout << "Glasses reconnected: " << current_id << '\n';
-							util::broadcast(GlassesReconnected{ current_id });
+			for (const auto& key : current_list) {
+				if (!util::contains(known_keys, key)) {
+					for (int i = 0; i < 4; ++i) { // limited amount of retries
+						if (auto x = tiltfive::obtainGlasses(key, m_Client)) {
+							Glasses* ptr = x->get();
+							m_LookupGlasses.assign(key, std::move(*x));							
+							util::broadcast(GlassesConnected{ key, ptr });
+							break;
 						}
 						else
-							std::cerr << "Reconnection failure: " << wrapped_glasses.error() << '\n';
-					}					
-				}
-				else {
-					// not known yet -- fresh pair
-					auto wrapped_glasses = tiltfive::obtainGlasses(current_id, m_Client);
-					
-					if (wrapped_glasses) {
-						m_LookupGlasses.assign(current_id, *wrapped_glasses);
-						std::cout << "Glasses connected: " << current_id << '\n';
-						util::broadcast(GlassesConnected{ current_id, wrapped_glasses->get() });
+							std::cout << "obtainGlasses failed: " << x << '\n';
+
+						std::this_thread::sleep_for(m_GlassesPollingInterval);
 					}
-					else
-						std::cerr << "Glasses connection failure: " << wrapped_glasses.error() << '\n';
 				}
 			}
+
+			// find out if any of the glasses got disconnected (do we want re-connection logic?)
+			std::vector<std::string> disconnected;
+			
+			for (const auto& glasses : m_LookupGlasses.get_values()) {
+				auto x = glasses->getConnectionState();
+
+				if (x) {
+					if (*x == ConnectionState::kDisconnected)
+						disconnected.push_back(glasses->getIdentifier());
+				}
+				else
+					std::cerr << "Failed to get connection state\n";
+			}
+
+			
+			for (auto key: disconnected)
+				m_LookupGlasses.erase(key);
 		}
 		else
 			std::cerr << "Error listing connected glasses: " << wrapped_current_list.error() << '\n';
+	}
+
+	void Manager::make_connections_exclusive() {
+		for (const auto& glasses : m_LookupGlasses.get_values()) {
+			auto x = glasses->getConnectionState();
+
+			if (x && *x == ConnectionState::kNotExclusivelyConnected) {
+				auto ack = glasses->acquire(m_ApplicationID); // -> Reserved state
+	
+				if (ack)
+					std::cout << "Acquired glasses\n";
+				else
+					std::cerr << "Failed to acquire glasses: " << ack << '\n';
+			}
+
+			if (x && *x == ConnectionState::kReserved) {
+				auto rdy = glasses->ensureReady(); // -> exclusive state
+
+				if (rdy)
+					std::cout << "Exclusive acquired\n";
+				else
+					std::cerr << "Failed to ensure readyness" << rdy <<  '\n';
+			}
+		}
+	}
+
+	void Manager::release_connections() {
+		for (const auto& glasses : m_LookupGlasses.get_values()) {
+			auto x = glasses->getConnectionState();
+
+			if (x && *x == ConnectionState::kConnected) {
+				auto err = glasses->release();
+
+				if (err)
+					std::cout << "Released glasses\n";
+				else
+					std::cerr << "Failed to release glasses: " << err << '\n';
+			}
+		}
 	}
 }

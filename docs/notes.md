@@ -22,6 +22,12 @@ The plugin seems to be compressed in a .tar.gz type blob, simple enough to extra
 Maybe it would be nice to include a tool to decompress everything and rename it to their internal asset filenames.
 The Csharp code inside should be a good guide to getting some initial results, as it ostensibly makes use of the NDK.
 
+# Unreal plugin analysis
+Ideal render target size is 2432x768 (1216x768 per eye), expected texture format is R8G8B8A8
+
+Like the unity plugin, this uses the C interface. Permission escalation up to exclusive access in TiltFiveHMD.cpp:406
+Retry-limits are being used, unlike what's happening in the c++ wrapper.
+
 # SimpleViewer
 Interestingly this shows that there are several different cameras on board; looks like both are some kind of IR camera; the wand has several IR leds in the antenna part which show up super bright in the viewer. 
 The streams shown in the viewer are not currently exposed in the NDK, after asking on Discord it seems that this is a planned feature for a future release. I might still be able to figure it out from the viewer program, but there's enough other stuff to setup anyway.
