@@ -4,7 +4,7 @@
 #include <vector>
 #include <cstdint>
 
-#include "dependencies.h"
+#include "../dependencies.h"
 
 // very basic wrapper; should cover just the most common use case
 // (always loads as RGB8 texture, no mipmaps)

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "dependencies.h"
+#include "../dependencies.h"
 
 #include <string>
 #include <filesystem>

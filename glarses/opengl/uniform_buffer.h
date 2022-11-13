@@ -1,6 +1,6 @@
 #pragma once
 
-#include "dependencies.h"
+#include "../dependencies.h"
 
 // NOTE currently you must manually do pointer arithmetic to work with uniform buffers;
 //      at some point this should be abstracted more cleanly

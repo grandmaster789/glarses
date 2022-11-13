@@ -1,69 +1,48 @@
 #pragma once
 
-#include <string>
-#include <string_view>
-#include <iosfwd>
-
 #include "../dependencies.h"
 
-namespace t5 {
+#include <string_view>
+
+namespace glarses::t5 {
 	class Glasses {
 	public:
+		using millisec = std::chrono::milliseconds;
+
+		explicit Glasses(std::string_view hardware_id);
+
 		Glasses() = default;
 		~Glasses();
-		
-		Glasses(
-			T5_Context       ctx, 
-			std::string_view glasses_id, 
-			std::string_view display_name
-		);
 
 		Glasses             (const Glasses&) = delete;
 		Glasses& operator = (const Glasses&) = delete;
-		Glasses             (Glasses&&) noexcept;
-		Glasses& operator = (Glasses&&) noexcept;
+		Glasses             (Glasses&& g) noexcept;
+		Glasses& operator = (Glasses&& g) noexcept;
 
-		void               set_name(std::string_view sv); // requires exclusive connection
-		const std::string& get_name() const;              // as in user facing name
-		std::string        get_identifier() const;        // as in hardware id (ish)
+		bool init(std::string_view display_name, GLFWwindow* context); // should be called from the graphics thread
+		void poll();
 
-		void init_graphics()                        const; // initializes openGL context (must be called from graphics thread)
-		bool try_get_pose(T5_GlassesPose* out_pose) const; // returns success/failure; needs exclusive connection
-
-		T5_ConnectionState get_connection_state() const;
-		T5_ConnectionState update_connection_state();
-
-		friend std::ostream& operator << (std::ostream& os, const Glasses& g);
+		const T5_GlassesPose& get_pose() const;
 
 	private:
-		// for exlusive operations, acquire -> ensure -> <operation> -> release
-		void acquire()      const; //
-		void ensure_ready() const; // may timeout
-		void release()      const;
+		static constexpr millisec k_RetryTiming = millisec(100);
 
-		// helper RAII that escalates from non-exclusive to connected state, and releases at end of scope
-		friend struct ExclusiveHelper;
-		struct ExclusiveHelper {
-			ExclusiveHelper(const Glasses* g);
-			~ExclusiveHelper();
+		bool acquire(std::string_view display_name);
+		void release();
+		bool ensure_ready(int max_retries = 10);
+		bool initGLContext(GLFWwindow* context);
 
-			const Glasses* m_Glasses;
-		};
+		void update_pose();
+		void update_connection_state();
+		void update_ipd();
 
-		T5_Glasses         m_Handle      = nullptr;
-		std::string        m_DisplayName = "Player 1";
+		T5_Glasses         m_Handle    = nullptr;
+		T5_Result          m_LastError = T5_SUCCESS;
+		T5_GlassesPose     m_LastPose  = {};
+		T5_ConnectionState m_State     = kT5_ConnectionState_Disconnected;
 
-		static constexpr int                       k_MaxNumRetries = 10;
-		static constexpr std::chrono::milliseconds k_RetryDelay    = std::chrono::milliseconds(10);
-
-		/*
-		*	Connection states:
-		*		kT5_ConnectionState_NotExclusivelyConnected	[non-exclusive]
-		*		kT5_ConnectionState_ExclusiveReservation    [reserved]
-		*		kT5_ConnectionState_ExclusiveConnection		[connected]
-		*		kT5_ConnectionState_Disconnected			[disconnected]
-		*/
-
-		T5_ConnectionState m_State;
+		double m_IPD      = 59.0; // in millimeters
+		bool   m_Ready    = false;
+		bool   m_Acquired = false;
 	};
 }

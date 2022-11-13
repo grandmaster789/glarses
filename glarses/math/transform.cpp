@@ -1,6 +1,6 @@
 #include "transform.h"
 
-namespace math {
+namespace glarses::math {
 	Transform& Transform::set_position(float x, float y, float z) {
 		m_Position = glm::vec3(x, y, z);
 		return *this;

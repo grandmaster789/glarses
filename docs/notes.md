@@ -4,7 +4,7 @@ Initial impressions is that at this point more effort was put into the Unity plu
 
 I'm hoping to implement the computer vision algorithms myself, and figure out a way to turn this into a low-cost CAVE setup.
 
-The current version of the NDK is 1.2.0-beta
+The current version of the NDK is 1.2.2-beta
 
 # Project dependencies
 Obviously this requires a Tilt5 headset; although part of the development will be geared towards making a usable debugging environment as well.

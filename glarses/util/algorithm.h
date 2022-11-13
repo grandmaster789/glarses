@@ -28,6 +28,12 @@ namespace util {
         const C& container,
         P        predicate
     );
+
+    template <typename C>
+    C set_difference(
+        const C& container_a,
+        const C& container_b
+    );
 }
 
 #include "algorithm.inl"

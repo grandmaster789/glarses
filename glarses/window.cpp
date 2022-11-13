@@ -3,8 +3,7 @@
 #include "cube.h"
 #include "io/file.h"
 
-#include "t5/t5_client.h"
-#include "t5/t5_gameboard.h"
+#include "t5/t5_manager.h"
 #include "t5/t5_glasses.h"
 
 #include <stdexcept>
@@ -76,11 +75,11 @@ namespace glarses {
 			throw std::runtime_error("Failed to initialize GLFW");
 
 		// set up an openGL 4.6 window with the Core profile
-		glfwWindowHint(GLFW_CLIENT_API,            GLFW_OPENGL_API);
+		glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
-		glfwWindowHint(GLFW_OPENGL_PROFILE,        GLFW_OPENGL_CORE_PROFILE);
-		glfwWindowHint(GLFW_SRGB_CAPABLE,          GL_TRUE); // enable sRGB
+		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+		glfwWindowHint(GLFW_SRGB_CAPABLE, GL_TRUE); // enable sRGB
 
 		m_Handle = glfwCreateWindow(
 			800,		// width
@@ -112,7 +111,7 @@ namespace glarses {
 			std::cerr << "glDebugMessageCallbackARB failure\n";
 
 		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS_ARB);
-		
+
 		// disable the 'notification' severity
 		glDebugMessageControlARB(
 			GL_DONT_CARE,	        		// source
@@ -134,8 +133,6 @@ namespace glarses {
 
 		m_Texture = Texture::load_file(assets / "textures" / "debug_color_02.png");
 		//m_Texture.bind(0);
-
-		// start looking for those glasses
 	}
 
 	Window::~Window() {
@@ -151,44 +148,12 @@ namespace glarses {
 		bool done = false;
 
 		// create a very temporary vertex array object without any data -- the required data is embedded in the shaders
-		GLuint vao = 0; 
+		GLuint vao = 0;
 		glCreateVertexArrays(1, &vao);
 		glBindVertexArray(vao);
 
-		auto& client = t5::Client::create("com.grandmaster.glarses", "0.0.1");
-		std::cout << client << '\n';
-		std::cout << client.attempt_get_service_version() << '\n';
-		std::cout << "T5 attention required: " << std::boolalpha << client.attempt_is_attention_required() << '\n';
-
-		auto changed = client.get_changed_system_parameters();
-		if (changed.empty()) {
-			std::cout << "No changed system parameters\n";
-		}
-
-		auto glass_ids = client.attempt_list_glasses();
-		std::vector<t5::Glasses> glasses;
-
-		for (const auto& x : glass_ids) {
-			static int s_player_index = 1;
-			std::stringstream sstr;
-			sstr << "Player " << s_player_index++;
-
-			glasses.push_back(client.create_glasses(x, sstr.str()));
-		}
-
-		std::cout << "XE: " << client.get_gameboard_size(T5_GameboardType::kT5_GameboardType_XE) << '\n';
-
-
-		auto& player1 = glasses[0];
-		player1.init_graphics();
-
-		glfwMakeContextCurrent(m_Handle);
-
 		while (!done) {
-			T5_GlassesPose pose;
-			if (player1.try_get_pose(&pose)) {
-				std::cout << pose.timestampNanos << '\n';
-			}
+			init_found_glasses(); // newly found glasses need to have their graphics context initialized in the graphics thread
 
 			int frame_width = 0;
 			int frame_height = 0;
@@ -228,5 +193,33 @@ namespace glarses {
 		}
 
 		glDeleteVertexArrays(1, &vao);
+	}
+
+	void Window::operator()(const t5::Manager::GlassesFound& found) {
+		std::lock_guard guard(m_FoundGlassesMutex);
+		m_FoundGlasses.push_back(found.m_Glasses);
+	}
+
+	void Window::init_found_glasses() {
+		decltype(m_FoundGlasses) found;
+
+		{
+			std::lock_guard guard(m_FoundGlassesMutex);
+
+			if (!m_FoundGlasses.empty())
+				std::swap(m_FoundGlasses, found);
+			else
+				return;
+		}
+
+		for (auto* obj : found)
+			obj->init(make_glasses_name(), m_Handle);
+	}
+
+	std::string Window::make_glasses_name() {
+		static int s_PlayerID = 1;
+		std::stringstream sstr;
+		sstr << "Player " << s_PlayerID++;
+		return sstr.str();
 	}
 }

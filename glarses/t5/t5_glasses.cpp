@@ -1,190 +1,166 @@
 #include "t5_glasses.h"
+#include "t5_manager.h"
 
-#include <ostream>
-#include <iostream>
-
-namespace t5 {
-	Glasses::Glasses(
-		T5_Context       ctx, 
-		std::string_view id,
-		std::string_view display_name
-	) {
-		if (auto err = t5CreateGlasses(ctx, id.data(), &m_Handle)) {
-			std::cerr << "t5CreateGlasses: " << t5CreateGlasses << '\n';
-			return; // maybe throw? the object is unusable after all
+namespace glarses::t5 {
+	Glasses::Glasses(std::string_view hardware_id) {
+		if (auto err = t5CreateGlasses(Manager::instance().get_context(), hardware_id.data(), &m_Handle)) {
+			std::cerr << "t5CreateGlasses: " << t5GetResultMessage(err) << '\n';
+			m_Handle = nullptr;
 		}
-
-		update_connection_state();
-
-		set_name(display_name);
+		else
+			std::cout << "Found: " << hardware_id << '\n';
 	}
 
 	Glasses::~Glasses() {
 		if (m_Handle) {
-			release();
+			if (m_Acquired)
+				release();
+
 			t5DestroyGlasses(&m_Handle);
 		}
 	}
 
-	Glasses::Glasses(Glasses&& g) noexcept:
-		m_Handle     (g.m_Handle),
-		m_DisplayName(std::move(g.m_DisplayName)),
-		m_State      (g.m_State)
+	Glasses::Glasses(Glasses&& g) noexcept :
+		m_Handle  (g.m_Handle),
+		m_LastPose(g.m_LastPose),
+		m_IPD     (g.m_IPD),
+		m_Ready   (g.m_Ready),
+		m_Acquired(g.m_Acquired)
 	{
-		g.m_Handle = nullptr;
+		g.m_Handle = nullptr; // for ownership purposes this is the only relevant one
 	}
 
-	Glasses& Glasses::operator = (Glasses&& g) noexcept {
+	Glasses& Glasses::operator= (Glasses&& g) noexcept {
 		if (m_Handle) {
-			release();
+			if (m_Acquired)
+				release();
+
 			t5DestroyGlasses(&m_Handle);
 		}
 
-		m_Handle      = g.m_Handle;
-		m_DisplayName = std::move(g.m_DisplayName);
-		m_State       = g.m_State;
+		m_Handle   = g.m_Handle;
+		m_LastPose = g.m_LastPose;
+		m_IPD      = g.m_IPD;
+		m_Ready    = g.m_Ready;
+		m_Acquired = g.m_Acquired;		
 
-		g.m_Handle = nullptr;
+		g.m_Handle = nullptr; // for ownership purposes this is the only relevant one
 
 		return *this;
 	}
 
-	void Glasses::set_name(std::string_view sv) {
-		ExclusiveHelper helper(this);
-
-		m_DisplayName = sv;
-		
-		auto err = t5SetGlassesDisplayName(m_Handle, m_DisplayName.c_str());
-		if (err)
-			std::cerr << "t5SetGlassesDisplayName: " << t5GetResultMessage(err) << '\n';
-	}
-
-	const std::string& Glasses::get_name() const {
-		return m_DisplayName;
-	}
-
-	std::string Glasses::get_identifier() const {
-		std::string buffer;
-		buffer.resize(64);
-		size_t sz = 64;
-
-		// limited number of retries
-		for (int i = 0; i < 4; ++i) {
-			if (auto err = t5GetGlassesIdentifier(m_Handle, buffer.data(), &sz)) {
-				if (err == T5_ERROR_STRING_OVERFLOW) {
-					buffer.resize(sz);
-					continue;
-				}
-				else {
-					std::cerr << "t5GetGlassesIdentifier: " << t5GetResultMessage(err) << '\n';
-					return {};
-				}
-			}
-			else
-				return buffer;
-
-		}
-
-		std::cerr << "Unknown error with t5GetGlassesIdentifier\n";
-		return {};
-	}
-
-	void Glasses::init_graphics() const {
-		ExclusiveHelper helper(this);
-
-		if (auto err = t5InitGlassesGraphicsContext(
-			m_Handle, 
-			T5_GraphicsApi::kT5_GraphicsApi_Gl, 
-			nullptr
-		))
-			std::cerr << "t5InitGlassesGraphicsContext: " << t5GetResultMessage(err) << '\n';
-	}
-
-	bool Glasses::try_get_pose(T5_GlassesPose* pose) const {
-		ExclusiveHelper helper(this);
-
-		if (auto err = t5GetGlassesPose(m_Handle, pose)) {
-			std::cerr << "t5GetGlassesPose: " << t5GetResultMessage(err) << '\n';
+	bool Glasses::init(
+		std::string_view display_name, 
+		GLFWwindow*      context
+	) {
+		if (!acquire(display_name))
 			return false;
-		}
+
+		if (!ensure_ready())
+			return false;
+
+		if (!initGLContext(context))
+			return false;
+
+		update_ipd();
+
+		m_Ready = true;
+		std::cout << "Glasses ready\n";
 
 		return true;
 	}
 
-	T5_ConnectionState Glasses::get_connection_state() const {
-		return m_State;
-	}
-
-	T5_ConnectionState Glasses::update_connection_state() {
-		auto err = t5GetGlassesConnectionState(m_Handle, &m_State);
-		if (err)
-			std::cerr << "t5GetGlassesConnectionState: " << t5GetResultMessage(err) << '\n';
-
-		return m_State;
-	}
-
-	void Glasses::ensure_ready() const {
-		for (int i = 0; i < k_MaxNumRetries; ++i) {
-			auto err = t5EnsureGlassesReady(m_Handle);
-
-			if (!err)
-				return; // success
-
-			if (err == T5_ERROR_TRY_AGAIN) {
-				std::this_thread::sleep_for(k_RetryDelay);
-				continue;
-			}
-			else {
-				std::cerr << "t5EnsureGlassesReady: " << t5GetResultMessage(err) << '\n';
-				return;
-			}
-			
+	void Glasses::poll() {
+		if (m_Ready) {
+			// update_connection_state();
+			update_pose();
 		}
-
-		std::cout << "ensure_ready() timeout\n";
 	}
 
-	void Glasses::acquire() const {
-		auto err = t5AcquireGlasses(m_Handle, m_DisplayName.c_str());
+	const T5_GlassesPose& Glasses::get_pose() const {
+		return m_LastPose;
+	}
 
-		if (err)
+	bool Glasses::acquire(std::string_view display_name) {
+		if (auto err = t5AcquireGlasses(m_Handle, display_name.data()))
 			std::cerr << "t5AcquireGlasses: " << t5GetResultMessage(err) << '\n';
+		else
+			m_Acquired = true;
+
+		return m_Acquired;
 	}
 
-	void Glasses::release() const {
-		auto err = t5ReleaseGlasses(m_Handle);
+	void Glasses::release() {
+		if (m_Acquired) {
+			m_Acquired = false;
 
-		if (err)
-			std::cerr << "t5ReleaseGlasses: " << t5GetResultMessage(err) << '\n';
+			if (auto err = t5ReleaseGlasses(m_Handle))
+				std::cerr << "t5ReleaseGlasses: " << t5GetResultMessage(err) << '\n';
+		}
 	}
 
-	std::ostream& operator << (std::ostream& os, const Glasses& g) {
-		auto state = g.get_connection_state();
-
-		os << g.get_name() << " ["; 
-
-		switch (state) {
-		case kT5_ConnectionState_Disconnected:            os << "disconnected";  break;
-		case kT5_ConnectionState_ExclusiveConnection:     os << "connected";     break;
-		case kT5_ConnectionState_ExclusiveReservation:    os << "reserved";      break;
-		case kT5_ConnectionState_NotExclusivelyConnected: os << "non-exclusive"; break;
-		default:
-			os << "UNKNOWN";
+	bool Glasses::ensure_ready(int max_retries) {
+		for (int i = 0; i < max_retries; ++i) {
+			if (auto err = t5EnsureGlassesReady(m_Handle)) {
+				if (err == T5_ERROR_TRY_AGAIN) {
+					std::this_thread::sleep_for(k_RetryTiming);
+					continue;
+				}
+				else {
+					std::cerr << "t5EnsureGlassesReady: " << t5GetResultMessage(err) << '\n';
+					return false;
+				}
+			}
+			else
+				return true;
 		}
 
-		os << ']';
-
-		return os;
+		std::cout << "Glasses::ensure_ready() timeout\n";
+		return false;
 	}
 
-	Glasses::ExclusiveHelper::ExclusiveHelper(const Glasses* g):
-		m_Glasses(g)
-	{
-		g->acquire();
-		g->ensure_ready();
+	bool Glasses::initGLContext(GLFWwindow* context) {
+		// [NOTE] this must be called from the graphics thread
+		// [NOTE] for some reason, the first call typically results in a tiltfive internal error;
+		//        doing it a second time seems to fix it...
+		if (auto err = t5InitGlassesGraphicsContext(m_Handle, kT5_GraphicsApi_Gl, nullptr)) {
+			glfwMakeContextCurrent(context);
+
+			if (err = t5InitGlassesGraphicsContext(m_Handle, kT5_GraphicsApi_Gl, nullptr)) {
+				std::cerr << "t5InitGlassesGraphicsContext: " << t5GetResultMessage(err) << '\n';
+				return false;
+			}
+			else
+				return true;
+		}
+		else
+			return true;
 	}
 
-	Glasses::ExclusiveHelper::~ExclusiveHelper() {
-		m_Glasses->release();
+	void Glasses::update_pose() {
+		T5_GlassesPose pose = {};
+
+		if (auto err = t5GetGlassesPose(m_Handle, &pose))
+			std::cerr << "t5GetGlassesPose: " << t5GetResultMessage(err) << '\n';
+		else
+			m_LastPose = pose;
+	}
+
+	void Glasses::update_connection_state() {
+		T5_ConnectionState state;
+
+		if (auto err = t5GetGlassesConnectionState(m_Handle, &state))
+			std::cerr << "t5GetGlassesConnectionState: " << t5GetResultMessage(err) << '\n';
+		else
+			m_State = state;
+	}
+
+	void Glasses::update_ipd() {
+		double ipd = 0.0;
+
+		if (auto err = t5GetGlassesFloatParam(m_Handle, 0, T5_ParamGlasses::kT5_ParamGlasses_Float_IPD, &ipd))
+			std::cerr << "t5GetGlassesFloatParam: " << t5GetResultMessage(err) << '\n';
+		else
+			m_IPD = ipd;
 	}
 }

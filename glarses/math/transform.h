@@ -2,7 +2,7 @@
 
 #include "../dependencies.h"
 
-namespace math {
+namespace glarses::math {
 	
 	class Transform {
 	public:

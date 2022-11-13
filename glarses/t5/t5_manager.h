@@ -2,20 +2,29 @@
 
 #include <thread>
 #include <string>
+#include <mutex>
+#include <memory>
 
 #include "../dependencies.h"
 #include "../util/flat_map.h"
 
-namespace t5 {
+namespace glarses {
+	class Window;
+}
+
+namespace glarses::t5 {
+	class Glasses;
+
 	class Manager {
 	public:
 		// Helpers start additional background threads to continuously poll
-		using milliseconds    = std::chrono::milliseconds;
-		using Client          = tiltfive::Client;
-		using Glasses         = tiltfive::Glasses;
-		using ConnectionState = tiltfive::ConnectionState;
-
+		using millisec   = std::chrono::milliseconds;
+		using GlassesPtr = std::unique_ptr<Glasses>;
+		
+	private:
 		Manager();
+
+	public:
 		~Manager();
 
 		Manager             (const Manager&) = delete;
@@ -23,36 +32,34 @@ namespace t5 {
 		Manager             (Manager&&) noexcept = delete;
 		Manager& operator = (Manager&&) noexcept = delete;
 		
-		struct GlassesConnected {
-			std::string m_ID;
-			Glasses*    m_Glasses; // non-owning
-		};
-
-		struct GlassesDisconnected {
-			std::string m_ID;
-		};
+		static Manager& instance();
+		void destroy();
 
 		const std::string& get_application_id() const;
+		const std::string& get_service_version() const;
+		T5_Context         get_context() const;
+
+		struct GlassesFound { std::string m_HardwareID; Glasses* m_Glasses; };
+		struct GlassesLost  { std::string m_HardwareID; Glasses* m_Glasses; };
 
 	private:
-		void init_client();
-		void loop_poll();
-		
-		void update_glasses_list();
-		void make_connections_exclusive();
-		void release_connections();
+		static constexpr millisec k_PollingRate = millisec(200);
 
-		std::jthread m_Thread;
-		bool         m_Exiting = false;
+		bool init_client();
+		void update_glasses_list();
+		void set_service_version(const std::string& version);
+
+		mutable std::mutex m_Mutex;
+		std::jthread       m_Thread;
+		
+		bool               m_Exiting = false;
 
 		std::string m_ApplicationID      = "com.grandmaster.glarses";
 		std::string m_ApplicationVersion = "0.0.1";
+		std::string m_ServiceVersion;
 
-		std::shared_ptr<Client> m_Client;
+		T5_Context m_Context = nullptr;
 
-		milliseconds m_ServicePollingInterval = milliseconds(1'000);
-		milliseconds m_GlassesPollingInterval = milliseconds(1'000); // how often the connection states are checked
-
-		util::FlatMap<std::string, std::shared_ptr<Glasses>> m_LookupGlasses;
+		util::FlatMap<std::string, GlassesPtr> m_Glasses; // 'hardware' id -> Glasses object (owning)
 	};
 }

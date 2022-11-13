@@ -55,4 +55,27 @@ namespace util {
             predicate
         ) != std::end(container);
     }
+
+    template <typename C>
+    C set_difference(
+        const C& container_a,
+        const C& container_b
+    ) {
+        // create locally sorted copies
+        auto a = container_a;
+        auto b = container_b;
+
+        std::sort(std::begin(a), std::end(a));
+        std::sort(std::begin(b), std::end(b));
+
+        C result;
+
+        std::set_difference(
+            std::begin(a), std::end(a),
+            std::begin(b), std::end(b),
+            std::back_inserter(result)
+        );
+
+        return result;
+    }
 }
