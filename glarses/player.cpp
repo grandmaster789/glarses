@@ -9,27 +9,32 @@ namespace glarses {
 		m_Name    (name),
 		m_Glasses (glasses)
 	{
-		m_Glasses->init(name, m_Window.get_handle());
+		m_GlassesInitialized = m_Glasses->init(name, m_Window.get_handle());
 	}
 
 	void Player::update() {
-		// update the pose if possible
-		if (m_Glasses->is_pose_fresh()) {
-			auto pose = m_Glasses->get_pose();
+		if (!m_GlassesInitialized)
+			m_GlassesInitialized = m_Glasses->init(m_Name, m_Window.get_handle());
 
-			std::cout
-				<< '('  << pose.posGLS_GBD.x
-				<< ", " << pose.posGLS_GBD.y
-				<< ", " << pose.posGLS_GBD.z
-				<< ")\n";
+		if (m_GlassesInitialized) {
+			// update the pose if possible
+			if (m_Glasses->is_pose_fresh()) {
+				auto pose = m_Glasses->get_pose();
+
+				std::cout
+					<< '(' << pose.posGLS_GBD.x
+					<< ", " << pose.posGLS_GBD.y
+					<< ", " << pose.posGLS_GBD.z
+					<< ")\n";
+			}
+
+			// update the mirror to the window
+			m_Window.make_current();
+			m_Window.clear();
+			m_Window.swap_buffers();
 		}
 
-		// update the mirror to the window
-		m_Window.make_current();
-		m_Window.clear();
-		m_Window.swap_buffers();
-
-		// notify when the window was closed
+		// notify when the window was closed (even if the glasses didn't fully initialize)
 		if (m_Window.should_close())
 			util::broadcast(Quit{ this });
 	}

@@ -25,7 +25,8 @@ namespace glarses {
 		static constexpr int k_TiltFiveNativeResolutionY = 768;
 
 		std::string  m_Name;
-		t5::Glasses* m_Glasses = nullptr; // the t5 Manager actually owns the object
+		t5::Glasses* m_Glasses            = nullptr; // the t5 Manager actually owns the object
+		bool         m_GlassesInitialized = false;   // occasionally initialization may timeout, keep track of it...
 		
 		Window m_Window = Window(k_TiltFiveNativeResolutionX, k_TiltFiveNativeResolutionY);
 
