@@ -31,7 +31,7 @@ namespace glarses::t5 {
 		Glasses& operator = (Glasses&& g) noexcept;
 
 		bool                  is_pose_fresh() const;
-		const T5_GlassesPose& get_pose() const;
+		const T5_GlassesPose& get_pose()      const;
 
 	private:
 		friend class Player;

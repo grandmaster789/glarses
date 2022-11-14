@@ -43,7 +43,7 @@ namespace glarses::t5 {
 		struct GlassesLost  { std::string m_HardwareID; Glasses* m_Glasses = nullptr; };
 
 	private:
-		static constexpr millisec k_PollingRate = millisec(10);
+		static constexpr millisec k_PollingRate = millisec(10); // try to go for 100Hz polling
 
 		bool init_client();
 		void update_glasses_list();

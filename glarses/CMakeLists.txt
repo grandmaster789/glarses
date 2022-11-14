@@ -4,8 +4,8 @@ add_library(glarses_lib
 	"window.cpp"
 	"dependencies.h" 
 	"dependencies.cpp"  
-	"cube.h"	
-	"cube.cpp" 
+		
+	 
 	
 	
 

@@ -1,6 +1,5 @@
 #include "window.h"
 #include "dependencies.h"
-#include "cube.h"
 #include "io/file.h"
 
 #include "t5/t5_manager.h"
@@ -44,6 +43,8 @@ namespace {
 
 namespace glarses {
 	Window::Window(int width, int height) {
+		// NOTE the one window thing is mostly due to the glew initialization... it should be possible to get rid of it but it's not a priority
+		//      (also, at the time of writing, tiltfive only supports one pair of glasses per computer)
 		if (g_HaveWindow)
 			throw std::runtime_error("Only one window is allowed...");
 		else
