@@ -39,11 +39,11 @@ namespace glarses::t5 {
 		const std::string& get_service_version() const;
 		T5_Context         get_context() const;
 
-		struct GlassesFound { std::string m_HardwareID; Glasses* m_Glasses; };
-		struct GlassesLost  { std::string m_HardwareID; Glasses* m_Glasses; };
+		struct GlassesFound { std::string m_HardwareID; Glasses* m_Glasses = nullptr; };
+		struct GlassesLost  { std::string m_HardwareID; Glasses* m_Glasses = nullptr; };
 
 	private:
-		static constexpr millisec k_PollingRate = millisec(200);
+		static constexpr millisec k_PollingRate = millisec(100);
 
 		bool init_client();
 		void update_glasses_list();

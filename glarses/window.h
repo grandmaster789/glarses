@@ -16,34 +16,30 @@ namespace glarses {
 	// kind of sloppy design - probably should separate various context interactions from the window, but hey... 
 	// just don't create multiple windows and you'll be fine (very basic guards are in place)
 
-	class Window:
-		public util::MessageHandler<t5::Manager::GlassesFound>
-	{
+	// When possible, the window should display one of the renders for an eye of the tiltfive
+
+	class Window {
 	public:
-		Window();
-		~Window();
+		Window(int width, int height);
 
 		Window             (const Window&) = delete;
 		Window& operator = (const Window&) = delete;
 		Window             (Window&&) noexcept = default;
 		Window& operator = (Window&&) noexcept = default;
 
-		void run();
+		GLFWwindow* get_handle() const;
 
-		void operator()(const t5::Manager::GlassesFound& found);
+		void make_current();
+		void clear();
+		void swap_buffers();
+		bool should_close() const;
 
 	private:
-		void        init_found_glasses();
-		std::string make_glasses_name();
-
 		GLFWwindow* m_Handle = nullptr;
 
 		// TODO the stuff below here should be moved somewhere else, it's not really window-related
 		ShaderProgram m_ShaderProgram;
 		Texture       m_Texture;
 		UniformBuffer m_PerFrameBuffer;
-
-		std::mutex                m_FoundGlassesMutex;
-		std::vector<t5::Glasses*> m_FoundGlasses;
 	};
 }

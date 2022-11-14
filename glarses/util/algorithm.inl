@@ -78,4 +78,14 @@ namespace util {
 
         return result;
     }
+
+    template <typename T>
+    std::vector<T*> weak_copy(const std::vector<std::unique_ptr<T>>& owning_copy) {
+        std::vector<T*> result(owning_copy.size());
+
+        for (size_t i = 0; i < owning_copy.size(); ++i)
+            result[i] = owning_copy[i].get();
+
+        return result;
+    }
 }

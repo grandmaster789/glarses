@@ -25,6 +25,8 @@ The Csharp code inside should be a good guide to getting some initial results, a
 # Unreal plugin analysis
 Ideal render target size is 2432x768 (1216x768 per eye), expected texture format is R8G8B8A8
 
+Default FOV is 48 degrees per eye
+
 Like the unity plugin, this uses the C interface. Permission escalation up to exclusive access in TiltFiveHMD.cpp:406
 Retry-limits are being used, unlike what's happening in the c++ wrapper.
 
@@ -47,7 +49,7 @@ The T5_FrameInfo struct suggests to me that we should render into two textures, 
 
 The C++ sample code seems to be very much inspired by Rust, weirdly combined with shared_ptr. I consider it fairly good code, could be better of course but not bad. It's not so bad that I should write my own versions of the same operations, I'll just add some notes and it should be ok enough to use.
 
-Because the code was written in a very Rust-like style, the generated html documentation is not quite ideal. There also seems to be quite a bit of GCC standard library documentation in there for some reason.
+Because the code was written in a Rust-inspired style, the generated html documentation is not quite ideal. There also seems to be quite a bit of GCC standard library documentation in there for some reason.
 
 # Gameboard
 All positions and orientations are relative to a gameboard, which is selected in the Tilt5 service. I'm fairly certain that at this point this part of the experience cannot be customized. Once I have a decent demo working, I'll have to ask in Discord what's up with that.

@@ -13,26 +13,6 @@
 
 namespace {
 	bool g_HaveWindow = false;
-	
-	std::string intepret_glfw_errorcode(int code) {
-		switch (code) {
-		case GLFW_NOT_INITIALIZED:		return "GLFW has not been initialized";
-		case GLFW_NO_CURRENT_CONTEXT:	return "No context is current for this thread";
-		case GLFW_INVALID_ENUM:			return "One of the arguments to the function was an invalid enum value";
-		case GLFW_INVALID_VALUE:		return "One of the arguments to the function was an invalid value";
-		case GLFW_OUT_OF_MEMORY:		return "A memory allocation failed";
-		case GLFW_API_UNAVAILABLE:		return "GLFW could not find support for the requested client API on the system";
-		case GLFW_VERSION_UNAVAILABLE:	return "The requested OpenGL or OpenGL ES version is not available";
-		case GLFW_PLATFORM_ERROR:		return "A platform - specific error occurred that does not match any of the more specific categories";
-		case GLFW_FORMAT_UNAVAILABLE:	return "The requested format is not supported or available";
-		default:
-			return std::string("Unknown error code: ") + std::to_string(code);
-		}
-	}
-
-	void glfw_error_callback(int code, const char* description) {
-		std::cerr << "GLFW error (" << intepret_glfw_errorcode(code) << "): " << description << '\n';
-	}
 
 	void GLAPIENTRY opengl_debug_callback(
 		GLenum,          // source
@@ -40,7 +20,7 @@ namespace {
 		GLuint,          // id
 		GLenum,          // severity
 		GLsizei,         // message size
-		GLchar* message,    
+		GLchar* message,
 		const void*      // userParam
 	) {
 		std::cerr << "OpenGL debug message: " << message << '\n';
@@ -63,27 +43,17 @@ namespace {
 }
 
 namespace glarses {
-	Window::Window() {
+	Window::Window(int width, int height) {
 		if (g_HaveWindow)
 			throw std::runtime_error("Only one window is allowed...");
 		else
 			g_HaveWindow = true;
 
-		glfwSetErrorCallback(&glfw_error_callback);
-
-		if (!glfwInit())
-			throw std::runtime_error("Failed to initialize GLFW");
-
-		// set up an openGL 4.6 window with the Core profile
-		glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
-		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-		glfwWindowHint(GLFW_SRGB_CAPABLE, GL_TRUE); // enable sRGB
-
+		// TiltFive native resolution is 1216x768 per eye
+		// (expected texture format is R8G8B8A8)
 		m_Handle = glfwCreateWindow(
-			800,		// width
-			600,        // height
+			width,		// width
+			height,     // height
 			"Glarses",  // title
 			nullptr,    // monitor
 			nullptr     // shared opengl context
@@ -96,6 +66,8 @@ namespace glarses {
 		glfwSwapInterval(1); // wait for 1 screen update before swapping front/back buffers (vsync)
 
 		glfwSetInputMode(m_Handle, GLFW_STICKY_KEYS, GL_TRUE); // buffer the keypresses
+
+		// glew requires an active context in order to initialize properly (and thus can't be moved to the application startup)
 
 		glewExperimental = true; // this is actually required for glew to try and get openGL core functions
 		auto glew_err = glewInit();
@@ -122,6 +94,7 @@ namespace glarses {
 			GL_FALSE						// enabled
 		);
 #endif
+		
 		auto assets = find_asset_folder();
 
 		m_ShaderProgram = load_shader_sources(
@@ -133,18 +106,19 @@ namespace glarses {
 
 		m_Texture = Texture::load_file(assets / "textures" / "debug_color_02.png");
 		//m_Texture.bind(0);
-	}
 
-	Window::~Window() {
-		glfwTerminate();
-	}
-
-	void Window::run() {
 		glClearColor(0.2f, 0.0f, 0.4f, 0.0f); // purple
 		glEnable(GL_DEPTH_TEST);
 		glFrontFace(GL_CCW);
 		glEnable(GL_CULL_FACE);
+	}
 
+	GLFWwindow* Window::get_handle() const {
+		return m_Handle;
+	}
+
+	/*
+	void Window::run() {
 		bool done = false;
 
 		// create a very temporary vertex array object without any data -- the required data is embedded in the shaders
@@ -153,8 +127,6 @@ namespace glarses {
 		glBindVertexArray(vao);
 
 		while (!done) {
-			init_found_glasses(); // newly found glasses need to have their graphics context initialized in the graphics thread
-
 			int frame_width = 0;
 			int frame_height = 0;
 
@@ -194,32 +166,32 @@ namespace glarses {
 
 		glDeleteVertexArrays(1, &vao);
 	}
+	*/
 
-	void Window::operator()(const t5::Manager::GlassesFound& found) {
-		std::lock_guard guard(m_FoundGlassesMutex);
-		m_FoundGlasses.push_back(found.m_Glasses);
+	void Window::make_current() {
+		glfwMakeContextCurrent(m_Handle);
 	}
 
-	void Window::init_found_glasses() {
-		decltype(m_FoundGlasses) found;
+	void Window::clear() {
+		int frame_width = 0;
+		int frame_height = 0;
 
-		{
-			std::lock_guard guard(m_FoundGlassesMutex);
+		glfwGetFramebufferSize(m_Handle, &frame_width, &frame_height);
 
-			if (!m_FoundGlasses.empty())
-				std::swap(m_FoundGlasses, found);
-			else
-				return;
-		}
-
-		for (auto* obj : found)
-			obj->init(make_glasses_name(), m_Handle);
+		glViewport(0, 0, frame_width, frame_height);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
-	std::string Window::make_glasses_name() {
-		static int s_PlayerID = 1;
-		std::stringstream sstr;
-		sstr << "Player " << s_PlayerID++;
-		return sstr.str();
+	void Window::swap_buffers() {
+		glfwSwapBuffers(m_Handle);
+	}
+
+	bool Window::should_close() const {
+		bool done = false;
+
+		done |= (glfwWindowShouldClose(m_Handle) == GL_TRUE);
+		done |= (glfwGetKey(m_Handle, GLFW_KEY_ESCAPE) == GLFW_PRESS);
+
+		return done;
 	}
 }

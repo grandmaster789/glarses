@@ -34,6 +34,9 @@ namespace util {
         const C& container_a,
         const C& container_b
     );
+
+    template <typename T>
+    std::vector<T*> weak_copy(const std::vector<std::unique_ptr<T>>& owning_copy);
 }
 
 #include "algorithm.inl"

@@ -13,6 +13,11 @@ namespace glarses::t5 {
 			
 			while (!m_Exiting) {
 				update_glasses_list(); // this will notify any newly found and/or lost connections 
+
+				for (auto& glasses : m_Glasses.get_values())
+					glasses->poll();
+
+				std::this_thread::sleep_for(k_PollingRate);
 			}
 
 			t5DestroyContext(&m_Context);

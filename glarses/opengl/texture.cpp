@@ -27,6 +27,28 @@ Texture& Texture::operator = (Texture&& t) noexcept {
 	return *this;
 }
 
+void Texture::init(
+	int    width,
+	int    height,
+	int    mip_levels,
+	GLenum format,
+	GLenum min_filter,
+	GLenum mag_filter
+) {
+	if (m_Handle)
+		throw std::runtime_error("Already initialized");
+
+	glCreateTextures(GL_TEXTURE_2D, 1, &m_Handle);                                  // https://docs.gl/gl4/glCreateTextures
+	glTextureParameteri(m_Handle, GL_TEXTURE_MAX_LEVEL, mip_levels);
+	glTextureParameteri(m_Handle, GL_TEXTURE_MIN_FILTER, min_filter);
+	glTextureParameteri(m_Handle, GL_TEXTURE_MAG_FILTER, mag_filter);
+	glTextureStorage2D(m_Handle, 1, format, width, height);                         // https://docs.gl/gl4/glTexStorage2D
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);                                          // https://docs.gl/gl4/glPixelStore
+
+	m_Width  = width;
+	m_Height = height;
+}
+
 Texture Texture::load_file(const std::filesystem::path& p) {
 	int w    = 0;
 	int h    = 0;
@@ -47,27 +69,31 @@ Texture Texture::load_file(const std::filesystem::path& p) {
 	);
 
 	// we now have enough data to fill out all of the openGL stuff
-	GLuint handle; 
-
-	glCreateTextures(GL_TEXTURE_2D, 1, &handle);                                    // https://docs.gl/gl4/glCreateTextures
-	glTextureParameteri(handle, GL_TEXTURE_MAX_LEVEL, 0);
-	glTextureParameteri(handle, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTextureParameteri(handle, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTextureStorage2D(handle, 1, GL_RGB8, w, h);                                   // https://docs.gl/gl4/glTexStorage2D
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);                                          // https://docs.gl/gl4/glPixelStore
+	Texture result;
+	result.init(
+		w,
+		h,
+		0,
+		GL_RGB8,
+		GL_LINEAR,
+		GL_LINEAR
+	);
 	
-	glTextureSubImage2D(handle, 0, 0, 0, w, h, GL_RGB, GL_UNSIGNED_BYTE, raw_data); // https://docs.gl/gl4/glTexSubImage2D
+	glTextureSubImage2D(
+		result.m_Handle, 
+		0, 
+		0, 
+		0, 
+		w, 
+		h, 
+		GL_RGB, 
+		GL_UNSIGNED_BYTE, 
+		raw_data
+	); // https://docs.gl/gl4/glTexSubImage2D
 	
-	glBindTextures(0, 1, &handle);
+	glBindTextures(0, 1, &result.m_Handle);
 
 	stbi_image_free(raw_data); // we should be done with the raw data at this point
-
-	// put the gl stuff into the Texture object
-	Texture result;
-
-	result.m_Handle = handle;
-	result.m_Width  = w;
-	result.m_Height = h;
 
 	return result;
 }
@@ -77,20 +103,28 @@ Texture Texture::load_raw_data(
 	int                         width,
 	int                         height
 ) {
-	GLuint handle;
-	glCreateTextures(GL_TEXTURE_2D, 1, &handle);                                                  // https://docs.gl/gl4/glCreateTextures
-	glTextureParameteri(handle, GL_TEXTURE_MAX_LEVEL, 0);
-	glTextureParameteri(handle, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTextureParameteri(handle, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexStorage2D(handle, 1, GL_RGB8, width, height);                                            // https://docs.gl/gl4/glTexStorage2D
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);                                                        // https://docs.gl/gl4/glPixelStore
-	 
-	glTextureSubImage2D(handle, 0, 0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, buffer.data()); // https://docs.gl/gl4/glTexSubImage2D
-
-	// put the gl stuff into the Texture object
 	Texture result;
 
-	result.m_Handle = handle;
+	result.init(
+		width,
+		height,
+		0,
+		GL_RGB8,
+		GL_LINEAR,
+		GL_LINEAR
+	);
+ 
+	glTextureSubImage2D(
+		result.m_Handle,   // target
+		0,                 // mip level
+		0,                 // x offset
+		0,                 // y offset
+		width, 
+		height, 
+		GL_RGB,            // format
+		GL_UNSIGNED_BYTE,  // pixel datatype	
+		buffer.data()
+	); // https://docs.gl/gl4/glTexSubImage2D
 
 	return result;
 }

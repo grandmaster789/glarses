@@ -4,32 +4,43 @@ add_library(glarses_lib
 	"window.cpp"
 	"dependencies.h" 
 	"dependencies.cpp"  
-	"cube.h"
-	"opengl/shader_program.h"
+	"cube.h"	
 	"cube.cpp" 
+	
+	
+
 	"io/file.h" 
 	"io/file.cpp" 
-	"util/string.h" 
-	"util/string.cpp" 
+
+	"math/transform.h"
+	"math/transform.cpp"
+	"math/rect.h" 
+
+	"t5/t5_manager.h" 
+	"t5/t5_manager.cpp"  
+	"t5/t5_glasses.h" 
+	"t5/t5_glasses.cpp"
+
+	"opengl/render_target.h" 
+	"opengl/render_buffer.h" 
+	"opengl/render_buffer.cpp" 
+	"opengl/frame_buffer.h" 
+	"opengl/frame_buffer.cpp" 
+	"opengl/render_target.cpp"
 	"opengl/shader_program.cpp" 
 	"opengl/texture.h" 
 	"opengl/texture.cpp" 
 	"opengl/uniform_buffer.h" 
 	"opengl/uniform_buffer.cpp" 
-	"render_target.h"   
-	"render_target.cpp" 
-	  
-	"t5/t5_manager.h" 
-	"t5/t5_manager.cpp"
-	"math/transform.h"
-	"math/transform.cpp"
+	"opengl/shader_program.h"
+
+	"util/algorithm.h"
 	"util/flat_map.h" 
+	"util/string.h" 
+	"util/string.cpp" 	
 	"util/mediator.h" 
 	"util/detail/mediator_queue.h"
-	"util/algorithm.h"  
-	"t5/t5_glasses.h" 
-	"t5/t5_glasses.cpp"
-)
+ "player.h" "player.cpp" "application.h" "application.cpp")
 
 find_package(fmt CONFIG REQUIRED)
 find_package(OpenGL REQUIRED)

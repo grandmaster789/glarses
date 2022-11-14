@@ -21,10 +21,20 @@ public:
 	Texture             (Texture&& t) noexcept;
 	Texture& operator = (Texture&& t) noexcept;
 
+	// NOTE the defaults reflect what's suitable for rendertarget textures
+	void init(
+		int    width,
+		int    height,
+		int    mip_levels     = 0,
+		GLenum storage_format = GL_RGBA8,
+		GLenum min_filter     = GL_NEAREST,
+		GLenum mag_filter     = GL_NEAREST
+	);
+
 	// uses STB to load the file - supports [jpg, png, bmp] at least
 	static Texture load_file(const std::filesystem::path& p);
 	static Texture load_raw_data(
-		const std::vector<uint8_t>& buffer,
+		const std::vector<uint8_t>& buffer, // assuming RGB8 format, no mip levels
 		int                         width,
 		int                         height
 	);

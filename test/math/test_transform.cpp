@@ -3,7 +3,7 @@
 
 namespace test {
 	TEST_CASE("as_matrix", "math::Transform") {
-		using math::Transform;
+		using glarses::math::Transform;
 
 		Transform x;
 

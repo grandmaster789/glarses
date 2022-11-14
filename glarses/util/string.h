@@ -4,8 +4,6 @@
 #include <string_view>
 #include <vector>
 
-// some of the more advanced utility classes from my Scimitar project
-
 namespace util {
 	// NOTE this does linear traversals for each of the needles
 	template <typename...Ts>

@@ -56,7 +56,7 @@ namespace glarses::t5 {
 		if (!acquire(display_name))
 			return false;
 
-		if (!ensure_ready())
+		if (!ensure_ready(20))
 			return false;
 
 		if (!initGLContext(context))
@@ -72,9 +72,13 @@ namespace glarses::t5 {
 
 	void Glasses::poll() {
 		if (m_Ready) {
-			// update_connection_state();
+			update_connection_state();
 			update_pose();
 		}
+	}
+
+	bool Glasses::is_pose_fresh() const {
+		return (Clock::now() - m_PoseAcquiredTimestamp) < k_PoseExpiration;
 	}
 
 	const T5_GlassesPose& Glasses::get_pose() const {
@@ -126,7 +130,9 @@ namespace glarses::t5 {
 		if (auto err = t5InitGlassesGraphicsContext(m_Handle, kT5_GraphicsApi_Gl, nullptr)) {
 			glfwMakeContextCurrent(context);
 
-			if (err = t5InitGlassesGraphicsContext(m_Handle, kT5_GraphicsApi_Gl, nullptr)) {
+			err = t5InitGlassesGraphicsContext(m_Handle, kT5_GraphicsApi_Gl, nullptr);
+
+			if (err) {
 				std::cerr << "t5InitGlassesGraphicsContext: " << t5GetResultMessage(err) << '\n';
 				return false;
 			}
@@ -140,10 +146,17 @@ namespace glarses::t5 {
 	void Glasses::update_pose() {
 		T5_GlassesPose pose = {};
 
-		if (auto err = t5GetGlassesPose(m_Handle, &pose))
+		if (auto err = t5GetGlassesPose(m_Handle, &pose)) {
+			// when the board isn't visible, skip notification
+			if (err == T5_ERROR_TRY_AGAIN)
+				return;
+
 			std::cerr << "t5GetGlassesPose: " << t5GetResultMessage(err) << '\n';
-		else
+		}
+		else {
+			m_PoseAcquiredTimestamp = Clock::now();
 			m_LastPose = pose;
+		}
 	}
 
 	void Glasses::update_connection_state() {
