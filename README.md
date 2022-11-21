@@ -29,3 +29,4 @@ Current project-level features:
 - CMakeList based project
 - Vcpkg package management
 - C++20 code
+- unit testing via Catch2
