@@ -36,10 +36,5 @@ namespace glarses {
 
 	private:
 		GLFWwindow* m_Handle = nullptr;
-
-		// TODO the stuff below here should be moved somewhere else, it's not really window-related
-		ShaderProgram m_ShaderProgram;
-		Texture       m_Texture;
-		UniformBuffer m_PerFrameBuffer;
 	};
 }

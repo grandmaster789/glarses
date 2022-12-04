@@ -4,11 +4,11 @@ add_library(glarses_lib
 	"window.cpp"
 	"dependencies.h" 
 	"dependencies.cpp"  
+	"player.h" 
+	"player.cpp" 
+	"application.h" 
+	"application.cpp"
 		
-	 
-	
-	
-
 	"io/file.h" 
 	"io/file.cpp" 
 
@@ -20,27 +20,24 @@ add_library(glarses_lib
 	"t5/t5_manager.cpp"  
 	"t5/t5_glasses.h" 
 	"t5/t5_glasses.cpp"
-
-	"opengl/render_target.h" 
-	"opengl/render_buffer.h" 
+	
+	"opengl/data_buffer.cpp" 
 	"opengl/render_buffer.cpp" 
-	"opengl/frame_buffer.h" 
 	"opengl/frame_buffer.cpp" 
 	"opengl/render_target.cpp"
 	"opengl/shader_program.cpp" 
-	"opengl/texture.h" 
 	"opengl/texture.cpp" 
-	"opengl/uniform_buffer.h" 
 	"opengl/uniform_buffer.cpp" 
-	"opengl/shader_program.h"
+	"opengl/vertex.cpp"
 
 	"util/algorithm.h"
 	"util/flat_map.h" 
 	"util/string.h" 
 	"util/string.cpp" 	
 	"util/mediator.h" 
-	"util/detail/mediator_queue.h"
- "player.h" "player.cpp" "application.h" "application.cpp")
+	 
+	"util/detail/mediator_queue.h"		
+)
 
 find_package(fmt CONFIG REQUIRED)
 find_package(OpenGL REQUIRED)

@@ -13,7 +13,10 @@ namespace glarses::opengl {
 		
 		RenderTarget(int width, int height);
 
+		[[nodiscard]]
 		RenderScope render_scope();
+
+		void blit_to_screen(int screen_width, int screen_height);
 
 	private:
 		int m_Width;

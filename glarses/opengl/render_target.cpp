@@ -36,7 +36,23 @@ namespace glarses::opengl {
 		RenderScope& operator = (RenderScope&&) noexcept = delete;
 	};
 
+	[[nodiscard]]
 	RenderTarget::RenderScope RenderTarget::render_scope() {
 		return RenderScope(this);
+	}
+
+	void RenderTarget::blit_to_screen(
+		int screen_width,
+		int screen_height
+	) {
+		// we're expecting that the source and destination resolutions are the same, 
+		// so NEAREST sampling is the most efficient
+
+		m_FrameBuffer.blit_to_screen(
+			math::Rect{ 0, 0, m_Width,      m_Height      },
+			math::Rect{ 0, 0, screen_width, screen_height },
+			GL_COLOR_BUFFER_BIT,
+			GL_NEAREST 
+		);
 	}
 }

@@ -98,16 +98,6 @@ namespace glarses {
 		
 		auto assets = find_asset_folder();
 
-		m_ShaderProgram = load_shader_sources(
-			assets / "shaders" / "basic_triangle.vert",
-			assets / "shaders" / "basic_triangle.frag"
-		);
-
-		m_PerFrameBuffer = UniformBuffer::create<glm::mat4>(0);
-
-		m_Texture = Texture::load_file(assets / "textures" / "debug_color_02.png");
-		//m_Texture.bind(0);
-
 		glClearColor(0.2f, 0.0f, 0.4f, 0.0f); // purple
 		glEnable(GL_DEPTH_TEST);
 		glFrontFace(GL_CCW);

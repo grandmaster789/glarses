@@ -3,7 +3,9 @@
 #include <fstream>
 
 namespace io {
-	std::string read_text_file(const std::filesystem::path& p) {
+	std::string read_text_file(
+		const std::filesystem::path& p
+	) {
 		std::string result;
 
 		size_t num_bytes = std::filesystem::file_size(p);
@@ -19,7 +21,10 @@ namespace io {
 		return result;
 	}
 
-	void write_text_file(const std::filesystem::path& p, const std::string& text) {
+	void write_text_file(
+		const std::filesystem::path& p, 
+		const std::string&           text
+	) {
 		std::ofstream out(p.string().c_str());
 		if (!out.good())
 			throw std::runtime_error("Failed to open file output");
@@ -27,7 +32,9 @@ namespace io {
 		out.write(text.data(), text.size());
 	}
 
-	std::vector<uint8_t> read_binary_file(const std::filesystem::path& p) {
+	std::vector<uint8_t> read_binary_file(
+		const std::filesystem::path& p
+	) {
 		std::vector<uint8_t> result;
 		size_t num_bytes = std::filesystem::file_size(p);
 		result.resize(num_bytes);
@@ -43,12 +50,27 @@ namespace io {
 		return result;
 	}
 
-	void write_binary_file(const std::filesystem::path& p, const std::vector<uint8_t>& data) {
+	void write_binary_file(
+		const std::filesystem::path& p, 
+		const std::vector<uint8_t>&  data
+	) {
 		std::ofstream out(p.string().c_str(), std::ios_base::binary);
 		if (!out.good())
 			throw std::runtime_error("Failed to open file output");
 
 		static_assert(sizeof(uint8_t) == sizeof(char));
 		out.write(reinterpret_cast<const char*>(data.data()), data.size());
+	}
+
+	void write_binary_file(
+		const std::filesystem::path& p, 
+		const void*                  data, 
+		size_t                       num_bytes
+	) {
+		std::ofstream out(p.string().c_str(), std::ios_base::binary);
+		if (!out.good())
+			throw std::runtime_error("Failed to open file output");
+
+		out.write(static_cast<const char*>(data), num_bytes);
 	}
 }

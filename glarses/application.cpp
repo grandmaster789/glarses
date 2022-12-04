@@ -46,7 +46,11 @@ namespace glarses {
 	void Application::run() {
 		// wait until we have at least one player
 		// (players will be started once a pair of t5 glasses is found)
+		// 
+		// starting a player creates a window for that player
+		//
 		std::cout << "Waiting for players to join\n";
+
 		while (true) {
 			if (!m_FoundGlasses.empty()) {
 				init_found_glasses();

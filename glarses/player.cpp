@@ -1,6 +1,10 @@
 #include "player.h"
 #include "util/mediator.h"
 
+namespace {
+
+}
+
 namespace glarses {
 	Player::Player(
 		const std::string& name,
@@ -10,6 +14,16 @@ namespace glarses {
 		m_Glasses (glasses)
 	{
 		m_GlassesInitialized = m_Glasses->init(name, m_Window.get_handle());
+
+		/*m_ShaderProgram = load_shader_sources(
+			assets / "shaders" / "basic_triangle.vert",
+			assets / "shaders" / "basic_triangle.frag"
+		);
+
+		m_PerFrameBuffer = UniformBuffer::create<glm::mat4>(0);
+
+		m_Texture = Texture::load_file(assets / "textures" / "debug_color_02.png");
+		//m_Texture.bind(0);*/
 	}
 
 	void Player::update() {
