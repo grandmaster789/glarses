@@ -1,7 +1,6 @@
 #pragma once
 
 #include "../dependencies.h"
-#include "../opengl/render_target.h"
 #include "../math/transform.h"
 
 #include <string_view>
@@ -30,8 +29,10 @@ namespace glarses::t5 {
 		Glasses             (Glasses&& g) noexcept;
 		Glasses& operator = (Glasses&& g) noexcept;
 
+		bool                  is_ready()      const;
 		bool                  is_pose_fresh() const;
 		const T5_GlassesPose& get_pose()      const;
+		double                get_ipd()       const; // updated after transitioning to the 'ready' state
 
 	private:
 		friend class Player;
@@ -45,7 +46,7 @@ namespace glarses::t5 {
 
 		bool acquire(std::string_view display_name);
 		void release();
-		bool ensure_ready(int max_retries = 20);
+		bool ensure_ready(int max_retries = 20); // I've seen anywhere between 0 - 5 actual retries
 		bool initGLContext(GLFWwindow* context);
 
 		void update_pose();

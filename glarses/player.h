@@ -2,9 +2,8 @@
 
 #include "t5/t5_glasses.h"
 #include "window.h"
-#include "opengl/shader_program.h"
-#include "opengl/data_buffer.h"
-#include "opengl/vertex.h"
+
+
 
 namespace glarses {
 	class Player {
@@ -36,8 +35,6 @@ namespace glarses {
 			k_TiltFiveNativeResolutionY
 		);
 
-		opengl::RenderTarget m_LeftEye  = opengl::RenderTarget(k_TiltFiveNativeResolutionX, k_TiltFiveNativeResolutionY);
-		opengl::RenderTarget m_RightEye = opengl::RenderTarget(k_TiltFiveNativeResolutionX, k_TiltFiveNativeResolutionY);
 		math::Transform      m_Pose;
 
 		// 'scene' data
@@ -46,8 +43,6 @@ namespace glarses {
 		math::Transform m_LeftEyePose;
 		math::Transform m_RightEyePose;
 
-		opengl::ShaderProgram m_CubeShader;
-		opengl::DataBuffer    m_CubeVertices;
-		opengl::VertexArray   m_CubeVAO;
+
 	};
 }

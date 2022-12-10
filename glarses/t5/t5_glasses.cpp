@@ -12,12 +12,8 @@ namespace glarses::t5 {
 	}
 
 	Glasses::~Glasses() {
-		if (m_Handle) {
-			if (m_Acquired)
-				release();
-
-			t5DestroyGlasses(&m_Handle);
-		}
+		if (m_Handle)
+			t5DestroyGlasses(&m_Handle); // this also releases the glasses apparantly
 	}
 
 	Glasses::Glasses(Glasses&& g) noexcept :
@@ -31,12 +27,8 @@ namespace glarses::t5 {
 	}
 
 	Glasses& Glasses::operator= (Glasses&& g) noexcept {
-		if (m_Handle) {
-			if (m_Acquired)
-				release();
-
+		if (m_Handle)
 			t5DestroyGlasses(&m_Handle);
-		}
 
 		m_Handle   = g.m_Handle;
 		m_LastPose = g.m_LastPose;

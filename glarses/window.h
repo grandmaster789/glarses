@@ -2,10 +2,6 @@
 
 #include "dependencies.h"
 
-#include "opengl/shader_program.h"
-#include "opengl/texture.h"
-#include "opengl/uniform_buffer.h"
-
 #include "t5/t5_manager.h"
 
 #include "util/mediator.h"
