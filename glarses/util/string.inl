@@ -3,7 +3,7 @@
 #include "string.h"
 #include <sstream>
 
-namespace util::detail {
+namespace glarses::util::detail {
 	template <
 		typename    t_Head, 
 		typename... t_Tail
@@ -39,7 +39,7 @@ namespace util::detail {
 	}
 }
 
-namespace util {
+namespace glarses::util {
 	template <typename...Ts>
 	std::vector<std::string> split(
 		std::string_view haystack,

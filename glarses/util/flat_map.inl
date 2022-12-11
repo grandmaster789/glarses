@@ -6,7 +6,7 @@
 #include <ostream>
 #include <iostream>
 
-namespace util {
+namespace glarses::util {
 	template <typename K, typename V>
 	V* FlatMap<K, V>::operator[](const K& key) noexcept {
 		auto it = find(m_Keys, key);

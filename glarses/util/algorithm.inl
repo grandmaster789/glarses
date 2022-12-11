@@ -5,7 +5,7 @@
 #include <vector>
 #include <array>
 
-namespace util {
+namespace glarses::util {
     template <typename C, typename V>
         requires (std::convertible_to<V, typename C::value_type>)
     auto find(

@@ -1,6 +1,6 @@
 #pragma once
 
-namespace util {
+namespace glarses::util {
     template <typename T, typename H>
     void attach_handler(H* handler);
 

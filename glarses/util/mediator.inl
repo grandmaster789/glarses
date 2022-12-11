@@ -3,7 +3,7 @@
 #include "mediator.h"
 #include "detail/mediator_queue.h"
 
-namespace util {
+namespace glarses::util {
     template <typename T, typename H>
     void attach_handler(H* handler) {
         detail::MediatorQueue<T>::instance().attach(handler);

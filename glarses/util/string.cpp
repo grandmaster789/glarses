@@ -1,6 +1,6 @@
 #include "string.h"
 
-namespace util {
+namespace glarses::util {
 	std::string to_lower(std::string_view sv) noexcept {
 		std::string result;
 		result.reserve(sv.size());

@@ -4,7 +4,7 @@
 #include <string_view>
 #include <vector>
 
-namespace util {
+namespace glarses::util {
 	// NOTE this does linear traversals for each of the needles
 	template <typename...Ts>
 	std::vector<std::string> split(

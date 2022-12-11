@@ -3,14 +3,16 @@
 
 namespace test {
 	TEST_CASE("split", "util::String") {
+		using namespace glarses::util;
+
 		std::string sample = "abc\r\ndef\nghi\nXjkl\r\nmno";
 		sample[13] = '\0'; // replace the 'X' with a null character
 
-		auto normalized = util::normalize(sample);
+		auto normalized = normalize(sample);
 		
 		REQUIRE(normalized == "abc\ndef\nghi\njkl\nmno");
 
-		auto spliced = util::split(normalized, "\n");
+		auto spliced = split(normalized, "\n");
 
 		REQUIRE(spliced.size() == 5);
 	}

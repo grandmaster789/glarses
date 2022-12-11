@@ -2,7 +2,7 @@
 #include "../util/string.h"
 #include <fstream>
 
-namespace io {
+namespace glarses::io {
 	std::string read_text_file(
 		const std::filesystem::path& p
 	) {

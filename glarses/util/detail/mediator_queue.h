@@ -4,7 +4,7 @@
 #include <mutex>
 #include <functional>
 
-namespace util::detail {
+namespace glarses::util::detail {
 	// A MessageHandler is either
 	//   1. an object with a callable operator that takes the message 
 	//   2. a lambda that takes the message

@@ -4,7 +4,7 @@
 #include "../algorithm.h"
 #include <iostream>
 
-namespace util::detail {
+namespace glarses::util::detail {
 	template <typename T>
 	MediatorQueue<T>& MediatorQueue<T>::instance() {
 		static MediatorQueue mq; // This ends up creating a specific queue for each template instance
