@@ -19,7 +19,7 @@ namespace glarses::util {
 	public:
 		// Full value semantics (default construct + destruct + copy + move)
 
-		t_Value* operator[](const t_Key& key)       noexcept; // returns nullptr if not found
+		      t_Value* operator[](const t_Key& key)       noexcept; // returns nullptr if not found
 		const t_Value* operator[](const t_Key& key) const noexcept; // returns nullptr if not found
 
 		std::pair<t_Key, t_Value> at(size_t index) const; // will throw if index is out of bounds
@@ -27,8 +27,8 @@ namespace glarses::util {
 		void assign(const t_Key& key, const t_Value& value) noexcept;
 		void assign(const t_Key& key, t_Value&& value) noexcept;
 
-		[[nodiscard]] bool insert(const t_Key& key, const t_Value& value) noexcept; // returns false if it would overwrite an entry
-		[[nodiscard]] bool insert(const t_Key& key, t_Value&& value) noexcept; // returns false if it would overwrite an entry
+		[[nodiscard]] bool insert(const t_Key& key, const t_Value&  value) noexcept; // returns false if it would overwrite an entry
+		[[nodiscard]] bool insert(const t_Key& key,       t_Value&& value) noexcept; // returns false if it would overwrite an entry
 
 		bool contains(const t_Key& key) const noexcept;
 		void erase(const t_Key& key);
@@ -37,7 +37,7 @@ namespace glarses::util {
 		size_t size() const noexcept;
 		bool is_empty() const noexcept;
 
-		const std::vector<t_Key>& get_keys()   const noexcept;
+		const std::vector<t_Key>&   get_keys()   const noexcept;
 		const std::vector<t_Value>& get_values() const noexcept;
 
 		template <typename t_Callback> // void(const t_Key&, t_Value&)

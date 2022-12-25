@@ -22,6 +22,10 @@
     },
     {
       "name": "stb"
+    },
+    {
+      "name": "gli",
+      "version>=": "2021-07-06"
     }
   ],
   "features": {

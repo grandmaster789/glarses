@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.21)
 
 # set a default CXX standard for the tools and targets that do not specify them.
 # If commented, the latest supported standard for your compiler is automatically set.
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 

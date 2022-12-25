@@ -9,9 +9,10 @@ add_executable(
   "unittest.h"
   "unittest.cpp"
   "io/test_file.cpp" 
+  "io/test_bitmap.cpp"
   "util/test_string.cpp"
   "math/test_transform.cpp"
-)
+ "util/test_aggregate.cpp" "util/test_concepts.cpp")
 
 target_include_directories(unittest PUBLIC ../glarses)
 
