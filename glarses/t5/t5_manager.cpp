@@ -140,7 +140,7 @@ namespace glarses::t5 {
 		auto lost_ids  = util::set_difference(known_ids, split_list);
 
 		// notify newly found glasses
-		for (auto id : new_ids) {
+		for (const auto& id : new_ids) {
 			auto obj = std::make_unique<Glasses>(id);
 			auto* weak = obj.get();
 
@@ -150,7 +150,7 @@ namespace glarses::t5 {
 		}
 
 		// notify lost glasses
-		for (auto id : lost_ids) {
+		for (const auto& id : lost_ids) {
 			auto* weak = m_Glasses[id]->get();
 			util::broadcast(GlassesLost{ id, weak });
 			m_Glasses.erase(id);
