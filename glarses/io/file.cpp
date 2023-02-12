@@ -8,7 +8,7 @@ namespace glarses::io {
 	) {
 		std::string result;
 
-		size_t num_bytes = std::filesystem::file_size(p);
+		size_t num_bytes = static_cast<size_t>(std::filesystem::file_size(p));
 		
 		result.resize(num_bytes);
 

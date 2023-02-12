@@ -15,8 +15,8 @@ include(cmake/vcpkg.cmake)   # download + bootstrap + dependency management
 
 # Set the project name and language
 project(glarses
-        VERSION 0.0.1
-        DESCRIPTION ""
+        VERSION 0.0.2
+        DESCRIPTION "Custom simulation engine targeting Tiltfive hardware"
         HOMEPAGE_URL "https://github.com/grandmaster789/glarses"
         LANGUAGES CXX C)
 

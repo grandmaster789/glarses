@@ -45,8 +45,7 @@ namespace glarses::t5 {
 		std::string_view display_name, 
 		GLFWwindow*      context
 	) {
-		if (!acquire(display_name))
-			return false;
+        (void) display_name;
 
 		if (!ensure_ready(20))
 			return false;
@@ -75,15 +74,6 @@ namespace glarses::t5 {
 
 	const T5_GlassesPose& Glasses::get_pose() const {
 		return m_LastPose;
-	}
-
-	bool Glasses::acquire(std::string_view display_name) {
-		if (auto err = t5AcquireGlasses(m_Handle, display_name.data()))
-			std::cerr << "t5AcquireGlasses: " << t5GetResultMessage(err) << '\n';
-		else
-			m_Acquired = true;
-
-		return m_Acquired;
 	}
 
 	void Glasses::release() {
@@ -119,10 +109,10 @@ namespace glarses::t5 {
 		// [NOTE] this must be called from the graphics thread
 		// [NOTE] for some reason, the first call typically results in a tiltfive internal error;
 		//        doing it a second time seems to fix it...
-		if (auto err = t5InitGlassesGraphicsContext(m_Handle, kT5_GraphicsApi_Gl, nullptr)) {
+		if (auto err = t5InitGlassesGraphicsContext(m_Handle, kT5_GraphicsApi_GL, nullptr)) {
 			glfwMakeContextCurrent(context);
 
-			err = t5InitGlassesGraphicsContext(m_Handle, kT5_GraphicsApi_Gl, nullptr);
+			err = t5InitGlassesGraphicsContext(m_Handle, kT5_GraphicsApi_GL, nullptr);
 
 			if (err) {
 				std::cerr << "t5InitGlassesGraphicsContext: " << t5GetResultMessage(err) << '\n';
@@ -138,7 +128,9 @@ namespace glarses::t5 {
 	void Glasses::update_pose() {
 		T5_GlassesPose pose = {};
 
-		if (auto err = t5GetGlassesPose(m_Handle, &pose)) {
+        // [NOTE] the usage parameter may also indicate a spectator; should redesign a bit around that
+        //
+		if (auto err = t5GetGlassesPose(m_Handle, kT5_GlassesPoseUsage_GlassesPresentation, &pose)) {
 			// when the board isn't visible, skip notification
 			if (err == T5_ERROR_TRY_AGAIN)
 				return;
