@@ -38,11 +38,9 @@ namespace glarses {
 		math::Transform      m_Pose;
 
 		// 'scene' data
-		math::Transform m_GameboardPose;
+		math::Transform m_GameBoardPose;
 		math::Transform m_HeadPose;
 		math::Transform m_LeftEyePose;
 		math::Transform m_RightEyePose;
-
-
 	};
 }

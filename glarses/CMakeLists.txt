@@ -1,22 +1,24 @@
-add_library(glarses_lib 
-	"glarses.cpp"
-	"window.cpp"
-	"dependencies.cpp"  
-	"player.cpp" 
-	"application.cpp"
-		
-	"io/file.cpp" 
-	"io/bitmap.cpp"
+add_library(glarses_lib
+            "glarses.cpp"
+            "window.cpp"
+            "dependencies.cpp"
+            "player.cpp"
+            "application.cpp"
 
-	"math/transform.cpp"
+            "io/file.cpp"
+            "io/bitmap.cpp"
 
-	"t5/t5_manager.cpp"  
-	"t5/t5_glasses.cpp"
-	
-	"opengl/texture.cpp"
+            "math/transform.cpp"
 
-	"util/string.cpp" 		
-  "util/aggregate.h" "util/concepts.h")
+            "t5/t5_manager.cpp"
+            "t5/t5_glasses.cpp"
+
+            "opengl/texture.cpp"
+			"opengl/framebuffer.cpp"
+			"opengl/renderbuffer.cpp"
+
+            "util/string.cpp"
+)
 
 find_package(fmt CONFIG REQUIRED)
 find_package(OpenGL REQUIRED)

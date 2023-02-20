@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../dependencies.h"
+
 namespace glarses::scene {
 	class Camera {
 	public:

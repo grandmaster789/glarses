@@ -13,9 +13,7 @@ namespace glarses {
 		m_Name    (name),
 		m_Glasses (glasses)
 	{
-		m_GlassesInitialized = m_Glasses->init(name, m_Window.get_handle());
-
-		/*m_ShaderProgram = load_shader_sources(
+    	/*m_ShaderProgram = load_shader_sources(
 			assets / "shaders" / "basic_triangle.vert",
 			assets / "shaders" / "basic_triangle.frag"
 		);
@@ -27,12 +25,13 @@ namespace glarses {
 	}
 
 	void Player::update() {
-		if (!m_GlassesInitialized)
+        if (!m_GlassesInitialized)
 			m_GlassesInitialized = m_Glasses->init(m_Name, m_Window.get_handle());
+
 
 		if (m_GlassesInitialized) {
 			// update the pose if possible
-			if (m_Glasses->is_pose_fresh()) {
+			/*if (m_Glasses->is_pose_fresh()) {
 				auto pose = m_Glasses->get_pose();
 
 				std::cout
@@ -40,7 +39,8 @@ namespace glarses {
 					<< ", " << pose.posGLS_GBD.y
 					<< ", " << pose.posGLS_GBD.z
 					<< ")\n";
-			}
+			}*/
+            std::cout << m_Glasses->get_position() << '\n';
 
 			// update the mirror to the window
 			m_Window.make_current();

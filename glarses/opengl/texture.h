@@ -38,6 +38,7 @@ namespace glarses::opengl {
 			GLenum   internal_format
 		);
 
+        // if no raw data is provided, a checkerboard pattern is generated
 		Texture(
 			uint32_t width, 
 			uint32_t height, 

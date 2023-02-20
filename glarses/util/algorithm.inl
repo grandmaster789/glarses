@@ -88,4 +88,26 @@ namespace glarses::util {
 
         return result;
     }
+
+    [[nodiscard]] auto stopwatch() {
+        struct Timing {
+            using Clock     = std::chrono::high_resolution_clock;
+            using TimePoint = Clock::time_point;
+
+            Timing() {
+                m_StartTime = Clock::now();
+            }
+
+            ~Timing() {
+                auto delta = Clock::now() - m_StartTime;
+                auto millis = std::chrono::duration_cast<std::chrono::milliseconds>(delta);
+
+                std::cout << millis.count() << "ms\n";
+            }
+
+            TimePoint m_StartTime;
+        };
+
+        return Timing();
+    }
 }

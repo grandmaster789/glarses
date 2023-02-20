@@ -10,14 +10,12 @@ namespace glarses::t5 {
 	Manager::Manager() :
 		m_Thread([&] { 
 			m_Exiting = !init_client(); // if init failed, skip over the loop entirely
-			
+
 			while (!m_Exiting) {
-				update_glasses_list(); // this will notify any newly found and/or lost connections 
+                update_glasses_list(); // this will notify any newly found and/or lost connections
+                poll_glasses();
 
-				for (auto& glasses : m_Glasses.get_values())
-					glasses->poll();
-
-				std::this_thread::sleep_for(k_PollingRate);
+				std::this_thread::sleep_for(k_GlassesPollingRate);
 			}
 
 			t5DestroyContext(&m_Context);
@@ -41,11 +39,11 @@ namespace glarses::t5 {
 			m_Thread.join();
 	}
 
-	const std::string& Manager::get_application_id() const {
+	std::string_view Manager::get_application_id() const {
 		return m_ApplicationID;
 	}
 
-	const std::string& Manager::get_service_version() const {
+	std::string_view Manager::get_service_version() const {
 		std::scoped_lock guard(m_Mutex);
 		return m_ServiceVersion;
 	}
@@ -157,7 +155,12 @@ namespace glarses::t5 {
 		}
 	}
 
-	void Manager::set_service_version(const std::string& version) {
+    void Manager::poll_glasses() {
+        for (auto& glasses : m_Glasses.get_values())
+            glasses->poll();
+    }
+
+	void Manager::set_service_version(std::string_view version) {
 		std::scoped_lock guard(m_Mutex);
 		m_ServiceVersion = version;
 	}

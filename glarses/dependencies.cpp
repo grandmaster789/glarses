@@ -14,17 +14,17 @@
 
 namespace glm {
 	std::ostream& operator << (std::ostream& os, const vec2& v) {
-		os << std::format("(%f, %f)", v.x, v.y);
+		os << std::format("({}, {})", v.x, v.y);
 		return os;
 	}
 
 	std::ostream& operator << (std::ostream& os, const vec3& v) {
-		os << std::format("(%f, %f, %f)", v.x, v.y, v.z);
+		os << std::format("({}, {}, {})", v.x, v.y, v.z);
 		return os;
 	}
 
 	std::ostream& operator << (std::ostream& os, const vec4& v) {
-		os << std::format("(%f, %f, %f, %f)", v.x, v.y, v.z, v.w);
+		os << std::format("({}, {}, {}, {})", v.x, v.y, v.z, v.w);
 		return os;
 	}
 

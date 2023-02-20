@@ -2,6 +2,7 @@
 
 #include <thread>
 #include <string>
+#include <string_view>
 #include <mutex>
 #include <memory>
 
@@ -18,7 +19,9 @@ namespace glarses::t5 {
 	class Manager {
 	public:
 		// Helpers start additional background threads to continuously poll
+        using Clock      = std::chrono::high_resolution_clock;
 		using millisec   = std::chrono::milliseconds;
+        using TimePoint  = Clock::time_point;
 		using GlassesPtr = std::unique_ptr<Glasses>;
 		
 	private:
@@ -35,19 +38,30 @@ namespace glarses::t5 {
 		static Manager& instance();
 		void destroy();
 
-		const std::string& get_application_id() const;
-		const std::string& get_service_version() const;
-		T5_Context         get_context() const;
+        // at the 'system' level there are currently only 2 parameters to query
+        // 1: version of the service software
+        // 2: control panel requires user interaction
+        //
+        // Both are unlikely to change while running this application, and the second one
+        // can be considered out-of-scope. We'll just query the service version during
+        // init and cache the results.
+        //
+		std::string_view get_application_id() const;
+		std::string_view get_service_version() const;
+
+		T5_Context       get_context() const;
 
 		struct GlassesFound { std::string m_HardwareID; Glasses* m_Glasses = nullptr; };
 		struct GlassesLost  { std::string m_HardwareID; Glasses* m_Glasses = nullptr; };
 
 	private:
-		static constexpr millisec k_PollingRate = millisec(10); // try to go for 100Hz polling
+		static constexpr millisec k_GlassesPollingRate = millisec(10);   // try to go for 100Hz updates for the glasses themselves
 
 		bool init_client();
 		void update_glasses_list();
-		void set_service_version(const std::string& version);
+        void poll_glasses();
+
+		void set_service_version(std::string_view version);
 
 		mutable std::mutex m_Mutex;
 		std::jthread       m_Thread;

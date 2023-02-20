@@ -1,10 +1,10 @@
 #pragma once
 
 #include "../dependencies.h"
-#include "../opengl/render_target.h"
 #include "../math/transform.h"
 
 #include <string_view>
+#include <mutex>
 
 namespace glarses {
 	class Player;
@@ -19,7 +19,7 @@ namespace glarses::t5 {
 		using Timepoint = Clock::time_point;
 		using millisec  = std::chrono::milliseconds;
 
-		explicit Glasses(std::string_view hardware_id);
+		explicit Glasses(const std::string& hardware_id);
 
 		Glasses() = default;
 		~Glasses();
@@ -29,36 +29,31 @@ namespace glarses::t5 {
 		Glasses             (Glasses&& g) noexcept;
 		Glasses& operator = (Glasses&& g) noexcept;
 
-		[[nodiscard]] bool                  is_pose_fresh() const;
-		[[nodiscard]] const T5_GlassesPose& get_pose()      const;
+        bool init(
+            std::string_view display_name,
+            GLFWwindow*      window_handle
+        );
+
+        glm::vec3         get_position()    const; // relative to gameboard (xy is gameboard plane)
+        glm::quat         get_orientation() const; //
+        T5_GameboardType  get_board_type()  const;
 
 	private:
-		friend class Player;
         friend class Manager;
 
-		bool init(std::string_view display_name, GLFWwindow* context); // should be called from the graphics thread
+        void poll(); // updates pose, called periodically by the t5_manager (from the managers' thread)
+        void cleanup() noexcept;
 
-		void poll();
+        [[nodiscard]] T5_ConnectionState query_connection_state() const;
+        [[nodiscard]] double             query_ipd() const;
 
-		static constexpr millisec k_RetryTiming    = millisec(100);
-		static constexpr millisec k_PoseExpiration = millisec(20);
+        T5_Glasses  m_Handle  = nullptr;
+        std::string m_FriendlyName;
+        double      m_IPD     = 0.059; // in meters
 
-		void release();
-		bool ensure_ready(int max_retries = 20);
-		bool initGLContext(GLFWwindow* context);
-
-		void update_pose();
-		void update_connection_state();
-		void update_ipd();
-
-		T5_Glasses         m_Handle    = nullptr;
-		T5_Result          m_LastError = T5_SUCCESS;
-		T5_GlassesPose     m_LastPose  = {};
-		Timepoint          m_PoseAcquiredTimestamp;
-		T5_ConnectionState m_State     = kT5_ConnectionState_Disconnected;
-
-		double m_IPD      = 59.0; // in millimeters
-		bool   m_Ready    = false;
-		bool   m_Acquired = false;
+        mutable std::mutex m_Mutex;
+        T5_GlassesPose     m_Pose;  // includes position, orientation, timestamp, board type
 	};
+
+    std::ostream& operator << (std::ostream& os, T5_ConnectionState state);
 }

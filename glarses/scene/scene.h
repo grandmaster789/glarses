@@ -3,9 +3,9 @@
 namespace glarses::scene {
 	class Scene {
 	public:
-		Scence() = default;
+		Scene() = default;
 
 	private:
-		
+
 	};
 }

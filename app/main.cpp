@@ -6,7 +6,8 @@ int main() {
     std::cout << "Launching\n";
 
     using namespace glarses;
-    {
+
+    try {
         Application app; 
         
         // start looking for those glasses
@@ -17,6 +18,15 @@ int main() {
 
         // this allows for manual waiting
         t5::Manager::instance().destroy();
+    }
+    catch (std::runtime_error& re) {
+        std::cerr << "Runtime error: " << re.what() << '\n';
+    }
+    catch (std::exception& ex) {
+        std::cerr << "Exception thrown: " << ex.what() << '\n';
+    }
+    catch (...) {
+        std::cerr << "Unknown exceeption thrown\n";
     }
 
     std::cout << "Done\n";
