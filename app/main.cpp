@@ -11,7 +11,7 @@ int main() {
         Application app; 
         
         // start looking for those glasses
-        // (any interaction with the t5::Manager will start the thread that polls the tiltfive system)
+        // (any interaction with the t5::Manager will start the thread that polls the tilt five system)
         std::cout << "T5 Application: " << t5::Manager::instance().get_application_id() << '\n';
 
         app.run();
@@ -26,7 +26,7 @@ int main() {
         std::cerr << "Exception thrown: " << ex.what() << '\n';
     }
     catch (...) {
-        std::cerr << "Unknown exceeption thrown\n";
+        std::cerr << "Unknown exception thrown\n";
     }
 
     std::cout << "Done\n";

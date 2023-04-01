@@ -8,7 +8,7 @@ namespace glarses::io {
 	) {
 		std::string result;
 
-		size_t num_bytes = static_cast<size_t>(std::filesystem::file_size(p));
+		auto num_bytes = static_cast<size_t>(std::filesystem::file_size(p));
 		
 		result.resize(num_bytes);
 
@@ -16,7 +16,7 @@ namespace glarses::io {
 		if (!src.good())
 			throw std::runtime_error("Failed to open file input");
 
-		src.read(result.data(), num_bytes);
+		src.read(result.data(), static_cast<std::streamsize>(num_bytes));
 
 		return result;
 	}
@@ -29,7 +29,7 @@ namespace glarses::io {
 		if (!out.good())
 			throw std::runtime_error("Failed to open file output");
 
-		out.write(text.data(), text.size());
+		out.write(text.data(), static_cast<std::streamsize>(text.size()));
 	}
 
 	std::vector<uint8_t> read_binary_file(
@@ -43,9 +43,9 @@ namespace glarses::io {
 		if (!src.good())
 			throw std::runtime_error("Failed to open file input");
 
-		// stream interface deals in chars, which *should* be bytes but it doesn't hurt to enforce thats
+		// stream interface deals in chars, which *should* be bytes but it doesn't hurt to enforce that
 		static_assert(sizeof(uint8_t) == sizeof(char)); 
-		src.read(reinterpret_cast<char*>(result.data()), num_bytes);
+		src.read(reinterpret_cast<char*>(result.data()), static_cast<std::streamsize>(num_bytes));
 
 		return result;
 	}
@@ -59,7 +59,7 @@ namespace glarses::io {
 			throw std::runtime_error("Failed to open file output");
 
 		static_assert(sizeof(uint8_t) == sizeof(char));
-		out.write(reinterpret_cast<const char*>(data.data()), data.size());
+		out.write(reinterpret_cast<const char*>(data.data()), static_cast<std::streamsize>(data.size()));
 	}
 
 	void write_binary_file(
@@ -71,6 +71,6 @@ namespace glarses::io {
 		if (!out.good())
 			throw std::runtime_error("Failed to open file output");
 
-		out.write(static_cast<const char*>(data), num_bytes);
+		out.write(static_cast<const char*>(data), static_cast<std::streamsize>(num_bytes));
 	}
 }

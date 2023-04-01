@@ -102,8 +102,8 @@ namespace glarses::io {
 	}
 
 	void Bitmap::set_pixel(int x_, int y_, const glm::vec4& color) {
-		uint32_t x = static_cast<uint32_t>(x_);
-		uint32_t y = static_cast<uint32_t>(y_);
+		auto x = static_cast<uint32_t>(x_);
+		auto y = static_cast<uint32_t>(y_);
 
 		uint32_t y_stride = m_NumChannels * m_Width;
 		uint32_t x_stride = m_NumChannels;
@@ -123,7 +123,7 @@ namespace glarses::io {
 
 		case e_BitmapFormat::format_f32:
 		{
-			float* data = reinterpret_cast<float*>(m_Data.data());
+			auto* data = reinterpret_cast<float*>(m_Data.data());
 
 			for (uint32_t i = 0; i < m_NumChannels; ++i)
 				data[
@@ -140,9 +140,9 @@ namespace glarses::io {
 	}
 
 	void Bitmap::set_pixel(int x_, int y_, int z_, const glm::vec4& color) {
-		uint32_t x = static_cast<uint32_t>(x_);
-		uint32_t y = static_cast<uint32_t>(y_);
-		uint32_t z = static_cast<uint32_t>(z_);
+		auto x = static_cast<uint32_t>(x_);
+        auto y = static_cast<uint32_t>(y_);
+        auto z = static_cast<uint32_t>(z_);
 
 		uint32_t z_stride = m_NumChannels * m_Width * m_Height;
 		uint32_t y_stride = m_NumChannels * m_Width;
@@ -164,7 +164,7 @@ namespace glarses::io {
 
 		case e_BitmapFormat::format_f32:
 		{
-			float* data = reinterpret_cast<float*>(m_Data.data());
+            auto* data = reinterpret_cast<float*>(m_Data.data());
 
 			for (uint32_t i = 0; i < m_NumChannels; ++i)
 				data[
@@ -184,8 +184,8 @@ namespace glarses::io {
 	glm::vec4 Bitmap::get_pixel(int x_, int y_) const {
 		glm::vec4 result(0, 0, 0, 0);
 
-		uint32_t x = static_cast<uint32_t>(x_);
-		uint32_t y = static_cast<uint32_t>(y_);
+        auto x = static_cast<uint32_t>(x_);
+        auto y = static_cast<uint32_t>(y_);
 
 		uint32_t y_stride = m_NumChannels * m_Width;
 		uint32_t x_stride = m_NumChannels;
@@ -219,9 +219,9 @@ namespace glarses::io {
 	glm::vec4 Bitmap::get_pixel(int x_, int y_, int z_) const {
 		glm::vec4 result(0, 0, 0, 0);
 
-		uint32_t x = static_cast<uint32_t>(x_);
-		uint32_t y = static_cast<uint32_t>(y_);
-		uint32_t z = static_cast<uint32_t>(z_);
+        auto x = static_cast<uint32_t>(x_);
+        auto y = static_cast<uint32_t>(y_);
+        auto z = static_cast<uint32_t>(z_);
 
 		uint32_t z_stride = m_NumChannels * m_Width * m_Height;
 		uint32_t y_stride = m_NumChannels * m_Width;
@@ -292,9 +292,9 @@ namespace glarses::io {
 		if (p.extension() == ".png") {
 			stbi_write_png(
 				p.generic_string().c_str(),
-				m_Width,
-				m_Height,
-				m_NumChannels,
+				static_cast<int>(m_Width),
+                static_cast<int>(m_Height),
+                static_cast<int>(m_NumChannels),
 				m_Data.data(),
 				static_cast<int>(m_Width * m_NumChannels * bytes_per_component(m_Format))
 			);
@@ -302,18 +302,18 @@ namespace glarses::io {
 		else if (p.extension() == ".bmp") {
 			stbi_write_bmp(
 				p.generic_string().c_str(),
-				m_Width,
-				m_Height,
-				m_NumChannels,
+                static_cast<int>(m_Width),
+                static_cast<int>(m_Height),
+                static_cast<int>(m_NumChannels),
 				m_Data.data()
 			);
 		}
 		else if (p.extension() == ".tga") {
 			stbi_write_tga(
 				p.generic_string().c_str(),
-				m_Width,
-				m_Height,
-				m_NumChannels,
+                static_cast<int>(m_Width),
+                static_cast<int>(m_Height),
+                static_cast<int>(m_NumChannels),
 				m_Data.data()
 			);
 		}
@@ -321,18 +321,18 @@ namespace glarses::io {
 			// HDR format expects float data, should test with u8 data as well
 			stbi_write_hdr(
 				p.generic_string().c_str(),
-				m_Width,
-				m_Height,
-				m_NumChannels,
+				static_cast<int>(m_Width),
+				static_cast<int>(m_Height),
+				static_cast<int>(m_NumChannels),
 				reinterpret_cast<const float*>(m_Data.data())
 			);
 		}
 		else if (p.extension() == ".jpg") {
 			stbi_write_jpg(
 				p.generic_string().c_str(),
-				m_Width,
-				m_Height,
-				m_NumChannels,
+				static_cast<int>(m_Width),
+				static_cast<int>(m_Height),
+				static_cast<int>(m_NumChannels),
 				m_Data.data(),
 				100 // quality
 			);

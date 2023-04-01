@@ -34,9 +34,9 @@ namespace glarses::t5 {
             GLFWwindow*      window_handle
         );
 
-        glm::vec3         get_position()    const; // relative to gameboard (xy is gameboard plane)
-        glm::quat         get_orientation() const; //
-        T5_GameboardType  get_board_type()  const;
+        std::optional<glm::vec3>         get_position()    const; // relative to gameboard (xy is gameboard plane)
+        std::optional<glm::quat>         get_orientation() const; //
+        std::optional<T5_GameboardType>  get_board_type()  const;
 
 	private:
         friend class Manager;

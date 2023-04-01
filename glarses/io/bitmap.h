@@ -48,17 +48,17 @@ namespace glarses::io {
 			const void*    raw_source_data = nullptr
 		);
 
-		Bitmap clone() const;
+		[[nodiscard]] Bitmap clone() const;
 
-		uint32_t get_width()  const;
-		uint32_t get_height() const;
-		uint32_t get_depth()  const;
+		[[nodiscard]] uint32_t get_width()  const;
+		[[nodiscard]] uint32_t get_height() const;
+		[[nodiscard]] uint32_t get_depth()  const;
 
-		uint32_t       get_num_channels() const;
-		e_BitmapType   get_type()         const;
-		e_BitmapFormat get_format()       const;
+		[[nodiscard]] uint32_t       get_num_channels() const;
+		[[nodiscard]] e_BitmapType   get_type()         const;
+		[[nodiscard]] e_BitmapFormat get_format()       const;
 
-		const std::vector<uint8_t>& get_data() const;
+		[[nodiscard]] const std::vector<uint8_t>& get_data() const;
 
 		// pixel colors are converted from/to float as needed
 		// NOTE these accessors are not suitable for subpixel operations;
@@ -68,8 +68,8 @@ namespace glarses::io {
 		void      set_pixel(int x, int y,        const glm::vec4& color);
 		void      set_pixel(int x, int y, int z, const glm::vec4& color);
 
-		glm::vec4 get_pixel(int x, int y)        const;
-		glm::vec4 get_pixel(int x, int y, int z) const;
+		[[nodiscard]] glm::vec4 get_pixel(int x, int y)        const;
+		[[nodiscard]] glm::vec4 get_pixel(int x, int y, int z) const;
 
 		friend std::ostream& operator << (std::ostream& os, const Bitmap& bmp);
 

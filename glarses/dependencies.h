@@ -42,4 +42,6 @@ namespace glm {
 	std::ostream& operator << (std::ostream& os, const mat2& m);
 	std::ostream& operator << (std::ostream& os, const mat3& m);
 	std::ostream& operator << (std::ostream& os, const mat4& m);
+
+    std::ostream& operator << (std::ostream& os, const quat& q);
 }

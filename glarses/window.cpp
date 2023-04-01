@@ -44,7 +44,7 @@ namespace {
 namespace glarses {
 	Window::Window(int width, int height) {
 		// NOTE the one window thing is mostly due to the glew initialization... it should be possible to get rid of it but it's not a priority
-		//      (also, at the time of writing, tiltfive only supports one pair of glasses per computer)
+		//      (also, at the time of writing, tilt five only supports one pair of glasses per computer)
 		if (g_HaveWindow)
 			throw std::runtime_error("Only one window is allowed...");
 		else
@@ -66,7 +66,7 @@ namespace glarses {
 		glfwMakeContextCurrent(m_Handle);
 		glfwSwapInterval(1); // wait for 1 screen update before swapping front/back buffers (vsync)
 
-		glfwSetInputMode(m_Handle, GLFW_STICKY_KEYS, GL_TRUE); // buffer the keypresses
+		glfwSetInputMode(m_Handle, GLFW_STICKY_KEYS, GL_TRUE); // buffer the key presses
 
 		// glew requires an active context in order to initialize properly (and thus can't be moved to the application startup)
 

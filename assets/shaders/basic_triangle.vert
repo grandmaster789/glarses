@@ -5,7 +5,7 @@ uniform PerFrameData {
 	// we require a 4x4 matrix to be set for the entire frame
 	// this can be set via glNamedBufferSubData()
 	//
-	uniform mat4 g_ModelViewProjection; 
+	mat4 g_ModelViewProjection;
 };
 
 layout (location = 0) 

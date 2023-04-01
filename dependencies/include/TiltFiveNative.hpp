@@ -367,6 +367,16 @@ class Glasses : public std::enable_shared_from_this<Glasses> {
     }
 
 public:
+    /// \brief Obtain the C handle for this glasses object
+    ///
+    /// This is the lower level handle for use with the C interface. In almost all cases, you won't
+    /// need to use this. If in doubt, don't.
+    ///
+    /// \return The C handle
+    [[nodiscard]] auto getHandle() const -> T5_Glasses {
+        return mGlasses;
+    }
+
     /// \brief Obtain a hardware (not user facing) identifier for the glasses
     ///
     /// Guaranteed to be stable for the duration of the glasses connection.
@@ -573,7 +583,7 @@ public:
 
     /// \brief Configure the wand event stream
     ///
-    /// \param[in]  config  - ::T5_WandStreamConfig filled by client to detail configuration
+    /// \param[in]  config  - ::T5_CameraStreamConfig filled by client to detail configuration
     auto configureCameraStream(T5_CameraStreamConfig config) -> Result<void> {
         T5_Result err = t5ConfigureCameraStreamForGlasses(mGlasses, config);
         if (!err) {

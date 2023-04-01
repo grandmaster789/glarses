@@ -15,14 +15,13 @@ namespace glarses::t5 {
                 update_glasses_list(); // this will notify any newly found and/or lost connections
                 poll_glasses();
 
-				std::this_thread::sleep_for(k_GlassesPollingRate);
+				std::this_thread::sleep_for(k_GlassesPollingRate); // approx 100Hz refresh
 			}
 
 			t5DestroyContext(&m_Context);
 		})
 	{
 	}
-	
 
 	Manager::~Manager() {
 		m_Exiting = true;

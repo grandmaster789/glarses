@@ -1,23 +1,26 @@
 add_library(glarses_lib
-            "glarses.cpp"
-            "window.cpp"
-            "dependencies.cpp"
-            "player.cpp"
-            "application.cpp"
+			"glarses.cpp"
+			"window.cpp"
+			"dependencies.cpp"
+			"player.cpp"
+			"application.cpp"
 
-            "io/file.cpp"
-            "io/bitmap.cpp"
+			"io/file.cpp"
+			"io/bitmap.cpp"
 
-            "math/transform.cpp"
+			"math/transform.cpp"
 
-            "t5/t5_manager.cpp"
-            "t5/t5_glasses.cpp"
+			"t5/t5_manager.cpp"
+			"t5/t5_glasses.cpp"
 
-            "opengl/texture.cpp"
+			"opengl/texture.cpp"
 			"opengl/framebuffer.cpp"
 			"opengl/renderbuffer.cpp"
 
-            "util/string.cpp"
+			"util/string.cpp"
+			"opengl/shader.cpp"
+			"opengl/shader_program.cpp"
+			"util/filesystem.cpp"
 )
 
 find_package(fmt CONFIG REQUIRED)
@@ -36,8 +39,11 @@ target_include_directories(glarses_lib PUBLIC
 )
 
 add_library(TiltFiveNative SHARED IMPORTED)
-set_property(TARGET TiltFiveNative PROPERTY IMPORTED_LOCATION "${PROJECT_SOURCE_DIR}/dependencies/lib/win64/TiltFiveNative.dll")
-set_property(TARGET TiltFiveNative PROPERTY IMPORTED_IMPLIB "${PROJECT_SOURCE_DIR}/dependencies/lib/win64/TiltFiveNative.dll.if.lib")
+
+if (WIN32)
+	set_property(TARGET TiltFiveNative PROPERTY IMPORTED_LOCATION "${PROJECT_SOURCE_DIR}/dependencies/lib/win/x86_64/TiltFiveNative.dll")
+	set_property(TARGET TiltFiveNative PROPERTY IMPORTED_IMPLIB "${PROJECT_SOURCE_DIR}/dependencies/lib/win/x86_64/TiltFiveNative.dll.if.lib")
+endif()
 
 target_link_libraries(glarses_lib PUBLIC 
 	glfw

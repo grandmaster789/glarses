@@ -15,12 +15,12 @@ include(cmake/vcpkg.cmake)   # download + bootstrap + dependency management
 
 # Set the project name and language
 project(glarses
-        VERSION 0.0.2
+        VERSION 0.0.3
         DESCRIPTION "Custom simulation engine targeting Tiltfive hardware"
         HOMEPAGE_URL "https://github.com/grandmaster789/glarses"
         LANGUAGES CXX C)
 
-# these flags are only supported by the MSVC compiler, but as the Tilt5 NDK is Windows-only, that's pretty likely the case
+# these flags are only supported by the MSVC compiler - at some point we'll add linux/android variants
 if (WIN32)
 	add_definitions(-DUNICODE -D_UNICODE)      # try to use unicode support
 	add_definitions(-DWIN32_LEAN_AND_MEAN)     # disable many includes from <windows.h>

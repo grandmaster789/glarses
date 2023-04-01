@@ -9,7 +9,7 @@ namespace glarses::scene {
 		glm::vec4 m_Albedo    = { 1.0f, 1.0f, 1.0f, 1.0f };
 		glm::vec4 m_Roughness = { 1.0f, 1.0f, 0.0f, 0.0f };
 		
-		float m_Opaque    = 1.0f; // transparancy factor
+		float m_Opaque    = 1.0f; // transparency factor
 		float m_AlphaTest = 0.0f;
 		float m_Metallic  = 0.0f;
 

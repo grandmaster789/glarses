@@ -95,7 +95,7 @@ namespace glarses::t5 {
         return true;
     }
 
-    glm::vec3 Glasses::get_position() const {
+    std::optional<glm::vec3> Glasses::get_position() const {
         // should this be cached? the mutex situation also doesn't quite seem right
 
         std::lock_guard guard(m_Mutex);
@@ -107,7 +107,7 @@ namespace glarses::t5 {
         );
     }
 
-    glm::quat Glasses::get_orientation() const {
+    std::optional<glm::quat> Glasses::get_orientation() const {
         // should this be cached? the mutex situation also doesn't quite seem right
 
         std::lock_guard guard(m_Mutex);
@@ -120,7 +120,7 @@ namespace glarses::t5 {
         );
     }
 
-    T5_GameboardType Glasses::get_board_type() const {
+    std::optional<T5_GameboardType> Glasses::get_board_type() const {
         // should this be cached? the mutex situation also doesn't quite seem right
 
         std::lock_guard guard(m_Mutex);

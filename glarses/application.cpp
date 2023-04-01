@@ -31,12 +31,12 @@ namespace glarses {
 			throw std::runtime_error("Failed to initialize GLFW");
 
 		// set up an openGL 4.6 window with the Core profile
-		glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);
+		glfwWindowHint(GLFW_CLIENT_API,            GLFW_OPENGL_API);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
-		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-		glfwWindowHint(GLFW_SRGB_CAPABLE, GL_TRUE); // enable sRGB
-		glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+		glfwWindowHint(GLFW_OPENGL_PROFILE,        GLFW_OPENGL_CORE_PROFILE);
+		glfwWindowHint(GLFW_SRGB_CAPABLE,          GL_TRUE); // enable sRGB
+		glfwWindowHint(GLFW_RESIZABLE,             GL_FALSE); // we're just doing the tilt five native resolution
 	}
 
 	Application::~Application() {
@@ -65,12 +65,17 @@ namespace glarses {
 		// (players exit by closing their window, pressing escape or disconnecting their glasses)
 
 		while (!m_Players.empty()) {
-			auto current_playerset = util::weak_copy(m_Players); // create a local copy to allow players to remove themselves from the set
+			auto current_player_set = util::weak_copy(m_Players); // create a local copy to allow players to remove themselves from the set
 
-			for (auto& player : current_playerset)
+            // each player should process inputs,
+			for (auto& player : current_player_set)
 				player->update();
 
-			glfwPollEvents(); // process all pending OS events (keypresses, window events, etc.)
+			glfwPollEvents(); // process all pending OS events (key presses, window events, etc.)
+
+            // see if any new players joined the party
+            if (!m_FoundGlasses.empty())
+                init_found_glasses();
 		}
 	}
 
@@ -96,7 +101,7 @@ namespace glarses {
 			std::lock_guard guard(m_FoundGlassesMutex);
 
 			if (!m_FoundGlasses.empty())
-				std::swap(m_FoundGlasses, found);
+				std::swap(m_FoundGlasses, found); // this clears the set of glasses that need to be initialized
 			else
 				return;
 		}
