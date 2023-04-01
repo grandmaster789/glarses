@@ -35,5 +35,6 @@
 /out/build/x64-Debug
 /out/build/x64-Release
 /cmake-build-release/vcpkg/
-/.idea/.name
+/.idea
 /out/
+/cmake-build-release/
