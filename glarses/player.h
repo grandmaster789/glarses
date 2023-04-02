@@ -1,5 +1,8 @@
 #pragma once
 
+#ifndef GLARSES_PLAYER_H
+#define GLARSES_PLAYER_H
+
 #include "t5/t5_glasses.h"
 #include "window.h"
 #include "opengl/shader.h"
@@ -46,3 +49,5 @@ namespace glarses {
 		math::Transform m_RightEyePose;
 	};
 }
+
+#endif

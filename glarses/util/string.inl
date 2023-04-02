@@ -1,5 +1,8 @@
 #pragma once
 
+#ifndef GLARSES_UTIL_STRING_INL
+#define GLARSES_UTIL_STRING_INL
+
 #include "string.h"
 #include <sstream>
 
@@ -120,3 +123,5 @@ namespace glarses::util {
 			is_linefeed(c);
 	}
 }
+
+#endif

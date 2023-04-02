@@ -1,5 +1,8 @@
 #pragma once
 
+#ifndef GLARSES_H
+#define GLARSES_H
+
 #include "application.h"
 #include "player.h"
 #include "window.h"
@@ -14,4 +17,4 @@
 
 #include "io/file.h"
 
-
+#endif

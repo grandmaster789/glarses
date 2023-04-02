@@ -1,5 +1,8 @@
 #pragma once
 
+#ifndef GLARSES_UTIL_FILESYSTEM_H
+#define GLARSES_UTIL_FILESYSTEM_H
+
 #include <filesystem>
 #include <string>
 #include <vector>
@@ -16,3 +19,5 @@ namespace glarses::util {
     size_t file_size  (const std::filesystem::path& p);
     void   delete_file(const std::filesystem::path& p);
 }
+
+#endif

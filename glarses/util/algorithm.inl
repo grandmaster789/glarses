@@ -1,5 +1,8 @@
 #pragma once
 
+#ifndef GLARSES_UTIL_ALGORITHM_INL
+#define GLARSES_UTIL_ALGORITHM_INL
+
 #include "algorithm.h"
 #include <algorithm>
 #include <vector>
@@ -111,3 +114,5 @@ namespace glarses::util {
         return Timing();
     }
 }
+
+#endif

@@ -1,5 +1,8 @@
 #pragma once
 
+#ifndef GLARSES_UTIL_DETAIL_MEDIATOR_QUEUE_INL
+#define GLARSES_UTIL_DETAIL_MEDIATOR_QUEUE_INL
+
 #include "mediator_queue.h"
 #include "../algorithm.h"
 #include <iostream>
@@ -72,3 +75,5 @@ namespace glarses::util::detail {
 			handler(message);
 	}
 }
+
+#endif

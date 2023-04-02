@@ -1,5 +1,8 @@
 #pragma once
 
+#ifndef GLARSES_UTIL_STRING_H
+#define GLARSES_UTIL_STRING_H
+
 #include <string>
 #include <string_view>
 #include <vector>
@@ -37,3 +40,5 @@ namespace glarses::util {
 }
 
 #include "string.inl"
+
+#endif

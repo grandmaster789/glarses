@@ -71,8 +71,10 @@ namespace glarses {
             auto ori = m_Glasses->get_orientation();
 
             if (pos && ori)
+                // NOTE - this will say '(-431602080, -431602080, -431602080) q(-431602080, -431602080 ,-431602080, -431602080)'
+                //        if there's no t5 board found... -431602080 is the 'INVALID' value for vector/quaternion values
                 std::cout << *pos << ' ' << *ori << '\n';
-		}
+        }
 
         // update the monitor window
         m_Window.make_current();

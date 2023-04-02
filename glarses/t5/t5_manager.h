@@ -1,5 +1,8 @@
 #pragma once
 
+#ifndef GLARSES_T5_MANAGER_H
+#define GLARSES_T5_MANAGER_H
+
 #include <thread>
 #include <string>
 #include <string_view>
@@ -77,3 +80,5 @@ namespace glarses::t5 {
 		util::FlatMap<std::string, GlassesPtr> m_Glasses; // 'hardware' id -> Glasses object (owning)
 	};
 }
+
+#endif

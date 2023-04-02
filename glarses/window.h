@@ -1,5 +1,8 @@
 #pragma once
 
+#ifndef GLARSES_WINDOW_H
+#define GLARSES_WINDOW_H
+
 #include "dependencies.h"
 
 #include "t5/t5_manager.h"
@@ -34,3 +37,5 @@ namespace glarses {
 		GLFWwindow* m_Handle = nullptr;
 	};
 }
+
+#endif

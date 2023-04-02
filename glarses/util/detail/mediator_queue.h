@@ -1,5 +1,8 @@
 #pragma once
 
+#ifndef GLARSES_UTIL_DETAIL_MEDIATOR_QUEUE_H
+#define GLARSES_UTIL_DETAIL_MEDIATOR_QUEUE_H
+
 #include <vector>
 #include <mutex>
 #include <functional>
@@ -39,3 +42,5 @@ namespace glarses::util::detail {
 }
 
 #include "mediator_queue.inl"
+
+#endif

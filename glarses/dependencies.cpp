@@ -50,7 +50,7 @@ namespace glm {
 	}
 
     std::ostream& operator << (std::ostream& os, const quat& q) {
-        os << std::format("q({}, {} ,{},  {})", q.x, q.y, q.x, q.w);
+        os << std::format("q({}, {} ,{}, {})", q.x, q.y, q.x, q.w);
         return os;
     }
 }

@@ -1,5 +1,8 @@
 #pragma once
 
+#ifndef GLARSES_UTIL_FLAT_MAP_INL
+#define GLARSES_UTIL_FLAT_MAP_INL
+
 #include "flat_map.h"
 #include "algorithm.h"
 
@@ -170,3 +173,5 @@ namespace glarses::util {
 		return os;
 	}
 }
+
+#endif

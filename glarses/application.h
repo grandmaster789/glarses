@@ -1,5 +1,8 @@
 #pragma once
 
+#ifndef GLARSES_APPLICATION_H
+#define GLARSES_APPLICATION_H
+
 #include "dependencies.h"
 #include "util/mediator.h"
 #include "t5/t5_manager.h"
@@ -42,3 +45,5 @@ namespace glarses {
 		std::vector<std::unique_ptr<Player>> m_Players;
 	};
 }
+
+#endif

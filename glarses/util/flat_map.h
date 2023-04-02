@@ -1,5 +1,8 @@
 #pragma once
 
+#ifndef GLARSES_UTIL_FLAT_MAP_H
+#define GLARSES_UTIL_FLAT_MAP_H
+
 #include <vector>
 #include <utility>
 #include <iosfwd>
@@ -52,3 +55,5 @@ namespace glarses::util {
 }
 
 #include "flat_map.inl"
+
+#endif

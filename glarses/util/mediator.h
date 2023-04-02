@@ -1,5 +1,8 @@
 #pragma once
 
+#ifndef GLARSES_UTIL_MEDIATOR_H
+#define GLARSES_UTIL_MEDIATOR_H
+
 namespace glarses::util {
     template <typename T, typename H>
     void attach_handler(H* handler);
@@ -30,3 +33,5 @@ namespace glarses::util {
 }
 
 #include "mediator.inl"
+
+#endif

@@ -1,5 +1,8 @@
 #pragma once
 
+#ifndef GLARSES_DEPENDENCIES_H
+#define GLARSES_DEPENDENCIES_H
+
 // some of these headers *require* a strict include order, so this file makes sure everything plays nicely
 
 #include <gl/glew.h>
@@ -45,3 +48,5 @@ namespace glm {
 
     std::ostream& operator << (std::ostream& os, const quat& q);
 }
+
+#endif

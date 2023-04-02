@@ -1,10 +1,14 @@
 #pragma once
 
+#ifndef GLARSES_T5_GLASSES_H
+#define GLARSES_T5_GLASSES_H
+
 #include "../dependencies.h"
 #include "../math/transform.h"
 
 #include <string_view>
 #include <mutex>
+
 
 namespace glarses {
 	class Player;
@@ -57,3 +61,5 @@ namespace glarses::t5 {
 
     std::ostream& operator << (std::ostream& os, T5_ConnectionState state);
 }
+
+#endif

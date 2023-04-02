@@ -1,5 +1,8 @@
 #pragma once
 
+#ifndef GLARSES_UTIL_MEDIATOR_INL
+#define GLARSES_UTIL_MEDIATOR_INL
+
 #include "mediator.h"
 #include "detail/mediator_queue.h"
 
@@ -33,4 +36,6 @@ namespace glarses::util {
     MessageHandler<T>::~MessageHandler() {
         detach_handler<T>(this);
     }
-} 
+}
+
+#endif

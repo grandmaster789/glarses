@@ -1,5 +1,8 @@
 #pragma once
 
+#ifndef GLARSES_SCENE_MATERIAL_H
+#define GLARSES_SCENE_MATERIAL_H
+
 #include "../dependencies.h"
 #include <cstdint>
 
@@ -24,3 +27,5 @@ namespace glarses::scene {
 
 	static_assert(sizeof(Material) % 16 == 0, "Material should be 16-bytes aligned");
 }
+
+#endif

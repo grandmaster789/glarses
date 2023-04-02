@@ -1,5 +1,8 @@
 #pragma once
 
+#ifndef GLARSES_UTIL_ALGORITHM_H
+#define GLARSES_UTIL_ALGORITHM_H
+
 #include <ranges>
 #include <chrono>
 
@@ -43,3 +46,5 @@ namespace glarses::util {
 }
 
 #include "algorithm.inl"
+
+#endif

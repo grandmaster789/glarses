@@ -1,5 +1,8 @@
 #pragma once
 
+#ifndef GLARSES_SCENE_CAMERA_H
+#define GLARSES_SCENE_CAMERA_H
+
 #include "../dependencies.h"
 
 namespace glarses::scene {
@@ -13,3 +16,5 @@ namespace glarses::scene {
 		glm::vec3 m_Position;
 	};
 }
+
+#endif

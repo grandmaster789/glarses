@@ -1,5 +1,8 @@
 #pragma once
 
+#ifndef GLARSES_OPENGL_SHADER_H
+#define GLARSES_OPENGL_SHADER_H
+
 #include "../dependencies.h"
 
 #include <string>
@@ -34,3 +37,5 @@ namespace glarses::opengl {
         std::string m_LastError;
     };
 }
+
+#endif

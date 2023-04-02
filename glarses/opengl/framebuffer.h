@@ -1,5 +1,8 @@
 #pragma once
 
+#ifndef GLARSES_OPENGL_FRAMEBUFFER_H
+#define GLARSES_OPENGL_FRAMEBUFFER_H
+
 #include "../dependencies.h"
 
 namespace glarses::opengl {
@@ -69,3 +72,5 @@ namespace glarses::opengl {
         GLuint m_Handle = 0;
     };
 }
+
+#endif

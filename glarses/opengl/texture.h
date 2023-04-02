@@ -1,5 +1,8 @@
 #pragma once
 
+#ifndef GLARSES_OPENGL_TEXTURE_H
+#define GLARSES_OPENGL_TEXTURE_H
+
 #include "../dependencies.h"
 #include <filesystem>
 #include <iosfwd>
@@ -59,3 +62,5 @@ namespace glarses::opengl {
 
 	std::ostream& operator << (std::ostream& os, e_TextureType type);
 }
+
+#endif
