@@ -7,7 +7,6 @@
 #include "../opengl/shader_program.h"
 
 namespace glarses::scene {
-    // FIXME this really should not be a singleton...
     class SimpleShaderProgram:
         public opengl::ShaderProgram
     {

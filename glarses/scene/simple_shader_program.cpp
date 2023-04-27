@@ -2,8 +2,6 @@
 #include "../util/filesystem.h"
 
 namespace {
-    // TODO this stuff should go somewhere else...
-
     namespace fs = std::filesystem;
     namespace gl = glarses::opengl;
 
