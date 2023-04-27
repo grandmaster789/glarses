@@ -29,7 +29,7 @@ namespace glarses::opengl {
                       void             use() const;
         [[nodiscard]] std::string_view get_last_error() const;
 
-        [[nodiscard]] GLint              get_attribute_location(std::string_view name) const;
+        [[nodiscard]] GLint            get_attribute_location(std::string_view name) const;
 
         void set_uniform(std::string_view name, int                    value);
         void set_uniform(std::string_view name, unsigned int           value);
@@ -45,7 +45,7 @@ namespace glarses::opengl {
         void set_uniform(std::string_view name, std::span<glm::vec4>   vectors);
         void set_uniform(std::string_view name, std::span<glm::mat4x4> matrices);
 
-    private:
+    protected:
         GLuint      m_Handle = 0; // created in :compile(...)
         std::string m_LastError;
     };

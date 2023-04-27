@@ -1,4 +1,5 @@
 #include "vertex_array.h"
+#include "vertex_attribute.h"
 #include "vertex_buffer.h"
 
 namespace glarses::opengl {
@@ -42,9 +43,9 @@ namespace glarses::opengl {
     }
 
     void VertexArray::attach_buffer(
-            const VertexBuffer& data,
-            GLuint              attribute_index,
-            const VertexMember& attribute_desc
+            const VertexBuffer&    data,
+            GLuint                 attribute_index,
+            const VertexAttribute& attribute_desc
     ) {
         assert(m_Handle != 0);
 
@@ -74,7 +75,7 @@ namespace glarses::opengl {
         glVertexArrayAttribFormat(
                 m_Handle,
                 attribute_index,
-                attribute_desc.m_Size,
+                attribute_desc.m_Stride,
                 attribute_desc.m_Type,
                 attribute_desc.m_Normalized,
                 attribute_desc.m_Offset

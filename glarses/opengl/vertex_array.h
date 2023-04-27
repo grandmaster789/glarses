@@ -7,14 +7,7 @@
 
 namespace glarses::opengl {
     class VertexBuffer;
-
-    struct VertexMember {
-        GLint     m_Size;
-        GLenum    m_Type;
-        GLboolean m_Normalized;
-        GLsizei   m_Stride;
-        GLuint    m_Offset;
-    };
+    struct VertexAttribute;
 
     class VertexArray {
     public:
@@ -33,9 +26,9 @@ namespace glarses::opengl {
         static void unbind();
 
         void attach_buffer(
-                const VertexBuffer& data,
-                GLuint              attribute_index,
-                const VertexMember& attribute_desc
+                const VertexBuffer&    data,
+                GLuint                 attribute_index,
+                const VertexAttribute& attribute_desc
         );
 
     private:

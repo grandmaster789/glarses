@@ -9,18 +9,20 @@
 namespace glarses::scene {
     class Cube {
     public:
-        Cube(float size = 1.0f);
+        Cube() = default;
 
-        // default move, copy via .clone()
+        // initializing the cube requires a valid openGL context
+        void init();
+
+
         Cube             (const Cube&) = delete;
         Cube& operator = (const Cube&) = delete;
-        Cube             (Cube&& c) noexcept;
-        Cube& operator = (Cube&& c) noexcept;
-
-        Cube clone() const;
+        Cube             (Cube&& c) noexcept = default;
+        Cube& operator = (Cube&& c) noexcept = default;
 
     private:
-
+        opengl::VertexBuffer m_Vertices;
+        opengl::VertexArray  m_VAO;
     };
 }
 
