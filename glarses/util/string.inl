@@ -44,6 +44,7 @@ namespace glarses::util::detail {
 
 namespace glarses::util {
 	template <typename...Ts>
+    [[nodiscard]]
 	std::vector<std::string> split(
 		std::string_view haystack,
 		const Ts&...     needles
@@ -66,9 +67,10 @@ namespace glarses::util {
 	}
 
 	template <typename... Ts>
-	[[nodiscard]] std::string stringify(const Ts&... args) {
+	[[nodiscard]]
+    std::string stringify(const Ts&... args) {
 		// NOTE const& by default is ok, but may be a pessimization for small types
-		// NOTE stringstream is sub-optimal but pretty convenient
+		// NOTE stringstream is suboptimal but pretty convenient
 
 		std::stringstream result;
 

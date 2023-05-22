@@ -2,26 +2,20 @@ add_library(glarses_lib
 			"glarses.cpp"
 			"window.cpp"
 			"dependencies.cpp"
-			"player.cpp"
 			"application.cpp"
 
 			"io/file.cpp"
 			"io/bitmap.cpp"
 
-			"math/transform.cpp"
+			"math/extent2d.cpp"
+			"math/extent3d.cpp"
 
 			"t5/t5_manager.cpp"
 			"t5/t5_glasses.cpp"
 
-			"opengl/texture.cpp"
-			"opengl/framebuffer.cpp"
-			"opengl/renderbuffer.cpp"
-
 			"util/string.cpp"
-			"opengl/shader.cpp"
-			"opengl/shader_program.cpp"
 			"util/filesystem.cpp"
-			scene/cube.cpp scene/cube.h opengl/vertex_buffer.h opengl/index_buffer.h opengl/vertex_array.h opengl/vertex_buffer.cpp opengl/vertex_array.cpp opengl/vertex.h opengl/vertex_attribute.h opengl/vertex.cpp scene/simple_shader_program.cpp scene/simple_shader_program.h)
+			math/offset2d.cpp math/offset3d.cpp opengl/gltypes.cpp)
 
 find_package(fmt CONFIG REQUIRED)
 find_package(OpenGL REQUIRED)

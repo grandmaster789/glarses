@@ -4,7 +4,6 @@
 #define GLARSES_T5_GLASSES_H
 
 #include "../dependencies.h"
-#include "../math/transform.h"
 
 #include <string_view>
 #include <mutex>

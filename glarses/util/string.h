@@ -10,20 +10,17 @@
 namespace glarses::util {
 	// NOTE this does linear traversals for each of the needles
 	template <typename...Ts>
-	std::vector<std::string> split(
-		std::string_view haystack,
-		const Ts&...     needles
-	);
+	[[nodiscard]] std::vector<std::string> split(std::string_view haystack, const Ts&... needles);
 
 	// NOTE these only do ASCII-style upper/lower casing. Full Unicode support is too complex for this project
-	std::string to_lower(std::string_view sv) noexcept;
-	std::string to_upper(std::string_view sv) noexcept;
+	[[nodiscard]] std::string to_lower(std::string_view sv) noexcept;
+	[[nodiscard]] std::string to_upper(std::string_view sv) noexcept;
 
-	std::string normalize(std::string_view sv) noexcept; // strips all line feed and null characters except for \n
+	[[nodiscard]] std::string normalize(std::string_view sv) noexcept; // strips all line feed and null characters except for \n
 
-	std::string concat(const std::vector<std::string>&      parts, std::string_view separator = "");
-	std::string concat(const std::vector<const char*>&      parts, std::string_view separator = "");
-	std::string concat(const std::vector<std::string_view>& parts, std::string_view separator = "");
+	[[nodiscard]] std::string concat(const std::vector<std::string>&      parts, std::string_view separator = "");
+	[[nodiscard]] std::string concat(const std::vector<const char*>&      parts, std::string_view separator = "");
+	[[nodiscard]] std::string concat(const std::vector<std::string_view>& parts, std::string_view separator = "");
 
 	// NOTE uses << operator to stringify individual arguments
 	template <typename... Ts>

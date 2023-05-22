@@ -28,7 +28,7 @@ namespace glarses {
 		glfwSetErrorCallback(&glfw_error_callback);
 
 		if (!glfwInit())
-			throw std::runtime_error("Failed to initialize GLFW");
+            throw std::runtime_error("Failed to initialize GLFW");
 
 		// set up an openGL 4.6 window with the Core profile
 		glfwWindowHint(GLFW_CLIENT_API,            GLFW_OPENGL_API);
@@ -44,78 +44,6 @@ namespace glarses {
 	}
 
 	void Application::run() {
-		// wait until we have at least one player
-		// (players will be started once a pair of t5 glasses is found)
-		// 
-		// starting a player creates a window for that player
-		//
-		std::cout << "Waiting for players to join\n";
 
-		while (true) {
-			if (!m_FoundGlasses.empty()) {
-				init_found_glasses();
-				break;
-			}
-
-			using namespace std::chrono_literals;
-			std::this_thread::sleep_for(100ms);
-		}
-
-		// now update all players until none are left
-		// (players exit by closing their window, pressing escape or disconnecting their glasses)
-
-		while (!m_Players.empty()) {
-			auto current_player_set = util::weak_copy(m_Players); // create a local copy to allow players to remove themselves from the set
-
-            // each player should process inputs,
-			for (auto& player : current_player_set)
-				player->update();
-
-			glfwPollEvents(); // process all pending OS events (key presses, window events, etc.)
-
-            // see if any new players joined the party
-            if (!m_FoundGlasses.empty())
-                init_found_glasses();
-		}
-	}
-
-	// this will be called from another thread; access should be synchronized
-	void Application::operator()(const t5::Manager::GlassesFound& found) {
-		std::lock_guard guard(m_FoundGlassesMutex);
-		m_FoundGlasses.push_back(found.m_Glasses);
-	}
-
-	void Application::operator()(const Player::Quit& player_quitting) {
-		std::erase_if(
-			m_Players, [&](const std::unique_ptr<Player>& p) { 
-				return p.get() == player_quitting.m_Player;
-			}
-		);
-	}
-
-	void Application::init_found_glasses() {
-		// transfer to this thread
-		std::vector<t5::Glasses*> found;
-
-		{
-			std::lock_guard guard(m_FoundGlassesMutex);
-
-			if (!m_FoundGlasses.empty())
-				std::swap(m_FoundGlasses, found); // this clears the set of glasses that need to be initialized
-			else
-				return;
-		}
-
-		// create a new Player object for each pair of glasses
-		// (includes a window and wand listener)
-		for (auto* obj : found)
-			m_Players.push_back(std::make_unique<Player>(make_player_name(), obj));
-	}
-
-	std::string Application::make_player_name() {
-		static int s_PlayerID = 1;
-		std::stringstream sstr;
-		sstr << "Player " << s_PlayerID++;
-		return sstr.str();
 	}
 }

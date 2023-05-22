@@ -31,6 +31,16 @@ if (WIN32)
 	add_compile_options("/W4")          # high warning level warnings
 	add_compile_options("/permissive-") # strict adherence to the c++ standard
 	add_compile_options("/utf-8")       # set source and executable character sets to UTF-8
+
+	add_compile_options("/wd4324")      # disable warning C4324 structure was padded due to alignment specifier
+
+	add_compile_options("/we4018")      # enable warning C4018 signed/unsigned token mismatch
+	add_compile_options("/we4101")      # enable warning C4101 unreferenced local variable
+	add_compile_options("/we4244")      # enable warning C4244 'argument' : conversion from 'type1' to 'type2', possible loss of data
+	add_compile_options("/we4267")      # enable warning C4267 unexpected tokens following preprocessor directive
+	add_compile_options("/we4305")      # enable warning C4305 'context' : truncation from 'type1' to 'type2'
+	add_compile_options("/we4307")      # enable warning C4307 'operator' : integral constant overflow
+	add_compile_options("/we4800")      # enable warning C4800 Implicit conversion from 'type' to bool. Possible information loss
 endif()
 
 add_subdirectory(./app)

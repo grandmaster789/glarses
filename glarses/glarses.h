@@ -4,7 +4,6 @@
 #define GLARSES_H
 
 #include "application.h"
-#include "player.h"
 #include "window.h"
 
 #include "t5/t5_manager.h"
