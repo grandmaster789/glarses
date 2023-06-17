@@ -1,5 +1,3 @@
-#pragma once
-
 #ifndef GLARSES_UTIL_ALGORITHM_INL
 #define GLARSES_UTIL_ALGORITHM_INL
 
@@ -7,6 +5,7 @@
 #include <algorithm>
 #include <vector>
 #include <array>
+#include <span>
 
 namespace glarses::util {
     template <typename C, typename V>
@@ -112,6 +111,35 @@ namespace glarses::util {
         };
 
         return Timing();
+    }
+
+    template <typename T>
+    requires std::is_trivially_copyable_v<T>
+    TriviallyCopyableByteSpan::TriviallyCopyableByteSpan(const T &x):
+        std::span<const std::byte>(
+            std::as_bytes(
+                std::span(&x, static_cast<size_t>(1))
+            )
+        )
+    {
+    }
+
+    template <typename T>
+    requires std::is_trivially_copyable_v<T>
+    TriviallyCopyableByteSpan::TriviallyCopyableByteSpan(std::span<T> x):
+        std::span<const std::byte>(
+            std::as_bytes(x)
+        )
+    {
+    }
+
+    template <typename T>
+    requires std::is_trivially_copyable_v<T>
+    TriviallyCopyableByteSpan::TriviallyCopyableByteSpan(std::span<const T> x):
+        std::span<const std::byte>(
+            std::as_bytes(x)
+        )
+    {
     }
 }
 

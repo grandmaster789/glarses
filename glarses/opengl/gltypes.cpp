@@ -169,6 +169,8 @@ namespace glarses::opengl {
             case e_UploadFormat::STENCIL_INDEX:   os << "STENCIL_INDEX";
             case e_UploadFormat::DEPTH_STENCIL:   os << "DEPTH_STENCIL";
 
+            case e_UploadFormat::AUTO:            os << "AUTO";
+
         default:
             os << "UNKNOWN";
         }
@@ -199,6 +201,8 @@ namespace glarses::opengl {
             case e_UploadType::UINT_8_8_8_8_REV:    os << "UINT_8_8_8_8_REV";
             case e_UploadType::UINT_10_10_10_2:     os << "UINT_10_10_10_2";
             case e_UploadType::UINT_2_10_10_10_REV: os << "UINT_2_10_10_10_REV";
+
+            case e_UploadType::AUTO:                os << "AUTO";
 
         default:
             os << "UNKNOWN";

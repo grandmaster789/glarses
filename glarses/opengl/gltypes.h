@@ -135,6 +135,8 @@ namespace glarses::opengl {
         DEPTH_COMPONENT,
         STENCIL_INDEX,
         DEPTH_STENCIL,
+
+        AUTO // this is not supported by all operations
     };
 
     enum class e_UploadType: uint32_t {
@@ -157,7 +159,9 @@ namespace glarses::opengl {
         UINT_8_8_8_8,
         UINT_8_8_8_8_REV,
         UINT_10_10_10_2,
-        UINT_2_10_10_10_REV
+        UINT_2_10_10_10_REV,
+
+        AUTO // only supported by a couple of operations
     };
 
     enum class e_Filter: uint8_t {

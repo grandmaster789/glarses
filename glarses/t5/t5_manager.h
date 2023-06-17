@@ -1,5 +1,3 @@
-#pragma once
-
 #ifndef GLARSES_T5_MANAGER_H
 #define GLARSES_T5_MANAGER_H
 

@@ -1,5 +1,3 @@
-#pragma once
-
 #ifndef GLARSES_UTIL_FILESYSTEM_H
 #define GLARSES_UTIL_FILESYSTEM_H
 

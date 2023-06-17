@@ -1,21 +1,27 @@
 add_library(glarses_lib
-			"glarses.cpp"
-			"window.cpp"
-			"dependencies.cpp"
-			"application.cpp"
+            "glarses.cpp"
+            "window.cpp"
+            "dependencies.cpp"
+            "application.cpp"
 
-			"io/file.cpp"
-			"io/bitmap.cpp"
+            "io/file.cpp"
+            "io/bitmap.cpp"
 
-			"math/extent2d.cpp"
-			"math/extent3d.cpp"
+            "math/extent2d.cpp"
+            "math/extent3d.cpp"
+            "math/offset2d.cpp"
+            "math/offset3d.cpp"
 
-			"t5/t5_manager.cpp"
-			"t5/t5_glasses.cpp"
+            "t5/t5_manager.cpp"
+            "t5/t5_glasses.cpp"
 
-			"util/string.cpp"
-			"util/filesystem.cpp"
-			math/offset2d.cpp math/offset3d.cpp opengl/gltypes.cpp)
+            "opengl/gltypes.cpp"
+            "opengl/draw_indirect_command.cpp"
+            "opengl/draw_indexed_indirect_command.cpp"
+
+            "util/string.cpp"
+            "util/filesystem.cpp"
+            opengl/dispatch_indirect_command.cpp opengl/buffer.cpp)
 
 find_package(fmt CONFIG REQUIRED)
 find_package(OpenGL REQUIRED)
