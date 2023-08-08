@@ -24,6 +24,8 @@
 #include "stb_image.h"
 #include "stb_image_write.h"
 
+#include "rang.hpp"
+
 #include <iosfwd>
 
 // Tilt5 NDK

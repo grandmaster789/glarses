@@ -5,6 +5,8 @@
 
 #include "application.h"
 
+#include "log/logger.h"
+
 #include "util/algorithm.h"
 #include "util/flat_map.h"
 #include "util/mediator.h"

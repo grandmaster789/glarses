@@ -6,9 +6,17 @@
 #include <iostream>
 
 int main() {
-    std::cout << "Launching\n";
-
+    // by default the global logger just writes to a file --
+    //   add a (colorized) console output as well
     using namespace glarses;
+
+    {
+        using namespace glarses::log;
+
+        Logger::instance().add(makeStdOutSink());
+    }
+
+    g_Log << "Launching";
 
     try {
         Application app;
@@ -25,5 +33,5 @@ int main() {
         std::cerr << "Unknown exception thrown\n";
     }
 
-    std::cout << "Done\n";
+    g_Log << "Done";
 }

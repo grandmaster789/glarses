@@ -19,6 +19,10 @@ add_library(glarses_lib
 			"util/memory.cpp"
 			util/atomic.cpp
 			util/active_object.cpp
+			log/log_category.cpp
+			log/log_message.cpp
+			log/log_sink.cpp
+			log/logger.cpp
 )
 
 # package-based dependencies (vcpkg)
@@ -29,6 +33,7 @@ find_package(glm CONFIG REQUIRED)
 
 find_path(STB_INCLUDE_DIRS "stb.h")
 find_path(VULKAN_INCLUDE vulkan/vulkan.h PATH "$ENV{VULKAN_SDK}/include")
+find_path(RANG_INCLUDE_DIRS "rang.hpp")
 find_path(PARALLEL_HASHMAP_INCLUDE_DIRS "parallel_hashmap/btree.h")
 
 # Manually add the Tilt5 NDK to the project, as well as header-only library paths
@@ -36,6 +41,7 @@ target_include_directories(glarses_lib PUBLIC
 #	"${PROJECT_SOURCE_DIR}/dependencies/include"
 	${STB_INCLUDE_DIRS}
 	${VULKAN_INCLUDE}
+	${RANG_INCLUDE_DIRS}
 	${PARALLEL_HASHMAP_INCLUDE_DIRS}
 )
 
