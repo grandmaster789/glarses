@@ -1,26 +1,25 @@
-#pragma once
-
 #ifndef GLARSES_DEPENDENCIES_H
 #define GLARSES_DEPENDENCIES_H
 
-// some of these headers *require* a strict include order, so this file makes sure everything plays nicely
+#include <vulkan/vulkan.hpp>
 
-#include <gl/glew.h>
-
-#define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
+#include <GLFW/glfw3.h> // must be included *after* vulkan
 
 // consider all angles radians -- none of that 'degree' stuff
 // use metaprogramming helpers (number of elements in a vec etc)
 // tbh glm isn't my favorite but it's a reasonable option
-#define GLM_FORCE_RADIANS
-#define GLM_META_PROG_HELPERS
-	#include <glm/glm.hpp>
-	#include <glm/ext.hpp>
-	#include <glm/gtx/quaternion.hpp>
-	#include <glm/gtx/transform.hpp>
-#undef GLM_META_PROG_HELPERS
-#undef GLM_FORCE_RADIANS
+#pragma warning(push)
+    #pragma warning(disable: 4201) // nonstandard nameless struct/union)
+
+    #define GLM_FORCE_RADIANS
+    #define GLM_META_PROG_HELPERS
+        #include <glm/glm.hpp>
+        #include <glm/ext.hpp>
+        #include <glm/gtx/quaternion.hpp>
+        #include <glm/gtx/transform.hpp>
+    #undef GLM_META_PROG_HELPERS
+    #undef GLM_FORCE_RADIANS
+#pragma warning(pop)
 
 #include "stb_image.h"
 #include "stb_image_write.h"

@@ -42,7 +42,7 @@ namespace glarses::util::detail {
 	}
 }
 
-namespace glarses::util {
+namespace glarses {
 	template <typename...Ts>
     [[nodiscard]]
 	std::vector<std::string> split(
@@ -54,7 +54,7 @@ namespace glarses::util {
 		size_t cursor = 0;
 
 		while (cursor < haystack.size()) {
-			const auto [x, y] = detail::find_first_string(haystack, cursor, needles...);
+			const auto [x, y] = util::detail::find_first_string(haystack, cursor, needles...);
 
 			std::string token{ haystack.substr(cursor, x - cursor) };
 			cursor = y;

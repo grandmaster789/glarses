@@ -8,7 +8,7 @@ var searchData=
   ['allocated_5fptr_2eh_5',['allocated_ptr.h',['http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00329.html',1,'']]],
   ['allocator_2eh_6',['allocator.h',['http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00332.html',1,'']]],
   ['any_7',['any',['http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00044.html',1,'']]],
-  ['array_8',['array',['http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00047.html',1,'']]],
+  ['array_8',['array.h',['http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00047.html',1,'']]],
   ['assertions_2eh_9',['assertions.h',['http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00854.html',1,'']]],
   ['assoc_5fcontainer_2ehpp_10',['assoc_container.hpp',['http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01190.html',1,'']]],
   ['atomic_11',['atomic',['http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00050.html',1,'']]],

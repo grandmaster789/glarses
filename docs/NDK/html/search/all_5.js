@@ -102,7 +102,7 @@ var searchData=
   ['exp_99',['exp',['http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01554.html#ga89579637d83fe041c9963cdcab272edd',1,]]],
   ['experimental_2falgorithm_100',['experimental/algorithm',['http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a17606.html',1,'']]],
   ['experimental_2fany_101',['experimental/any',['http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a17627.html',1,'']]],
-  ['experimental_2farray_102',['experimental/array',['http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a17630.html',1,'']]],
+  ['experimental_2farray_102',['experimental/array.h',['http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a17630.html',1,'']]],
   ['experimental_2fbits_2ffs_5fdir_2eh_103',['experimental/bits/fs_dir.h',['http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a17933.html',1,'']]],
   ['experimental_2fbits_2ffs_5ffwd_2eh_104',['experimental/bits/fs_fwd.h',['http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a17939.html',1,'']]],
   ['experimental_2fbits_2ffs_5fpath_2eh_105',['experimental/bits/fs_path.h',['http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a17951.html',1,'']]],

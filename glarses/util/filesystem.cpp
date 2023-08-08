@@ -2,7 +2,7 @@
 
 #include <fstream>
 
-namespace glarses::util {
+namespace glarses {
     namespace fs = std::filesystem;
 
     std::string read_text_file(
@@ -35,7 +35,7 @@ namespace glarses::util {
         if (!output.good())
             throw std::runtime_error("Failed to open output file");
 
-        output.write(sv.data(), sv.size());
+        output.write(sv.data(), static_cast<std::streamsize>(sv.size()));
 
         return output.tellp();
     }
@@ -70,7 +70,7 @@ namespace glarses::util {
         if (!output.good())
             throw std::runtime_error("Failed to open output file");
 
-        output.write(reinterpret_cast<const char*>(buffer.data()), buffer.size());
+        output.write(reinterpret_cast<const char*>(buffer.data()), static_cast<std::streamsize>(buffer.size()));
 
         return output.tellp();
     }
@@ -85,7 +85,7 @@ namespace glarses::util {
         if (!output.good())
             throw std::runtime_error("Failed to open output file");
 
-        output.write(static_cast<const char*>(data), num_bytes);
+        output.write(static_cast<const char*>(data), static_cast<std::streamsize>(num_bytes));
 
         return output.tellp();
     }
@@ -93,7 +93,9 @@ namespace glarses::util {
     bool file_exists(
         const std::filesystem::path& p
     ) {
-        return std::filesystem::exists(p);
+        return
+            std::filesystem::exists(p) &&
+            std::filesystem::is_block_file(p);
     }
 
     // unit test facility functions (should probably not be used in production)
@@ -106,6 +108,86 @@ namespace glarses::util {
     void delete_file(
         const std::filesystem::path& p
     ) {
+        if (file_exists(p))
+            std::filesystem::remove(p);
+        else
+            throw std::runtime_error("File does not exist");
+    }
+
+    bool directory_exists(const std::filesystem::path& p) {
+        return
+            std::filesystem::exists(p) &&
+            std::filesystem::is_directory(p);
+    }
+
+    std::vector<std::filesystem::path> get_files_in_directory(const std::filesystem::path& p) {
+        std::vector<std::filesystem::path> result;
+
+        if (!directory_exists(p))
+            throw std::runtime_error("Directory does not exist");
+
+        for (std::filesystem::directory_iterator it(p); it != std::filesystem::directory_iterator(); ++it) {
+            const auto& current_path = it->path();
+
+            if (std::filesystem::is_block_file(current_path))
+                result.push_back(current_path);
+        }
+
+        return result;
+    }
+
+    std::vector<std::filesystem::path> get_subdirectories(const std::filesystem::path& p) {
+        std::vector<std::filesystem::path> result;
+
+        if (!directory_exists(p))
+            throw std::runtime_error("Directory does not exist");
+
+        for (std::filesystem::directory_iterator it(p); it != std::filesystem::directory_iterator(); ++it) {
+            const auto& current_path = it->path();
+
+            if (std::filesystem::is_directory(current_path))
+                result.push_back(current_path);
+        }
+
+        return result;
+    }
+
+    void create_directory(const std::filesystem::path& p) {
+        if (std::filesystem::exists(p))
+            throw std::runtime_error("Path already exists");
+
+        std::filesystem::create_directory(p);
+    }
+
+    void delete_directory(const std::filesystem::path& p) {
+        if (!directory_exists(p))
+            throw std::runtime_error("Directory does not exist");
+
+        auto subdirs = get_subdirectories(p);
+        if (!subdirs.empty())
+            for (const auto& sub: subdirs)
+                delete_directory(sub);
+
+        auto files = get_files_in_directory(p);
+        for (const auto& f: files)
+            delete_file(f);
+
         std::filesystem::remove(p);
+    }
+
+    void set_current_directory(const std::filesystem::path& p) {
+        std::filesystem::current_path() = p;
+    }
+
+    std::filesystem::path get_current_directory () {
+        return std::filesystem::current_path();
+    }
+
+    size_t get_free_space() {
+        auto info = std::filesystem::space(
+                std::filesystem::current_path()
+        );
+
+        return info.free;
     }
 }

@@ -16,9 +16,10 @@ include(cmake/vcpkg.cmake)   # download + bootstrap + dependency management
 # Set the project name and language
 project(glarses
         VERSION 0.0.3
-        DESCRIPTION "Custom simulation engine targeting Tiltfive hardware"
+        DESCRIPTION "Custom experimental engine targeting Tiltfive hardware"
         HOMEPAGE_URL "https://github.com/grandmaster789/glarses"
-        LANGUAGES CXX C)
+        LANGUAGES CXX C
+)
 
 # these flags are only supported by the MSVC compiler - at some point we'll add linux/android variants
 if (WIN32)
@@ -45,6 +46,7 @@ endif()
 
 add_subdirectory(./app)
 add_subdirectory(./glarses)
+add_subdirectory(./dependencies)
 
 enable_testing()
 add_subdirectory(./test)

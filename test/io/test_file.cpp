@@ -4,7 +4,7 @@
 
 namespace test {
 	TEST_CASE("write_read_text", "io::File") {
-		using namespace glarses::util;
+		using namespace glarses;
 		using namespace glarses::io;
 		using namespace std::filesystem;
 
@@ -13,16 +13,16 @@ namespace test {
 
 		write_text_file(test_filename, sample);
 		
-		auto readback = normalize(read_text_file(test_filename)); // the normalize gets rid of newline and null variations
+		auto read_back = normalize(read_text_file(test_filename)); // the normalize gets rid of newline and null variations
 
-		REQUIRE(readback == sample);
+		REQUIRE(read_back == sample);
 
 		remove(test_filename);
 	}
 
 	TEST_CASE("write_read_empty_text", "io::File") {
 		using namespace glarses::io;
-		using namespace glarses::util;
+		using namespace glarses;
 		using namespace std::filesystem;
 
 		const std::string sample;
@@ -30,11 +30,11 @@ namespace test {
 
 		write_text_file(test_filename, sample);
 
-		auto readback = normalize(read_text_file(test_filename)); // the normalize gets rid of newline and null variations
+		auto read_back = normalize(read_text_file(test_filename)); // the normalize gets rid of newline and null variations
 
-		REQUIRE(readback == sample);
+		REQUIRE(read_back == sample);
 
-		std::filesystem::remove(test_filename);
+		remove(test_filename);
 	}
 
 	TEST_CASE("write_read_binary", "io::File") {
@@ -46,9 +46,9 @@ namespace test {
 
 		write_binary_file(test_filename, sample);
 
-		auto readback = read_binary_file(test_filename);
+		auto read_back = read_binary_file(test_filename);
 
-		REQUIRE(readback == sample);
+		REQUIRE(read_back == sample);
 
 		remove(test_filename);
 	}
@@ -62,9 +62,9 @@ namespace test {
 
 		write_binary_file(test_filename, sample);
 
-		auto readback = read_binary_file(test_filename);
+		auto read_back = read_binary_file(test_filename);
 
-		REQUIRE(readback == sample);
+		REQUIRE(read_back == sample);
 
 		remove(test_filename);
 	}

@@ -5,7 +5,7 @@
 
 #include "dependencies.h"
 #include "util/mediator.h"
-#include "t5/t5_manager.h"
+#include "os/window.h"
 
 #include <mutex>
 #include <vector>
@@ -19,7 +19,7 @@ namespace glarses {
 		void run();
 
 	private:
-
+        std::vector<os::Window> m_Windows;
 	};
 }
 

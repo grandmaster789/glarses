@@ -4,10 +4,6 @@
 #define GLARSES_H
 
 #include "application.h"
-#include "window.h"
-
-#include "t5/t5_manager.h"
-#include "t5/t5_glasses.h"
 
 #include "util/algorithm.h"
 #include "util/flat_map.h"

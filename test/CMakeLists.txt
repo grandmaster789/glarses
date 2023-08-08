@@ -4,13 +4,14 @@ find_package(Catch2 3 REQUIRED)
 include(Catch)
 
 add_executable(
-  unittest
+        unittest
 
-  "unittest.h"
-  "unittest.cpp"
-  "io/test_file.cpp" 
-  "io/test_bitmap.cpp"
-  "util/test_string.cpp"
+        "unittest.h"
+        "unittest.cpp"
+        "io/test_file.cpp"
+        "io/test_bitmap.cpp"
+        "util/test_string.cpp"
+        "util/test_array.cpp"
 )
 
 target_include_directories(unittest PUBLIC ../glarses)

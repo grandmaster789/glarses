@@ -80,7 +80,7 @@ inline auto obtainParamChangeHelper(std::shared_ptr<Client> client,
 
 /// \brief Client for communicating with the Tilt Five™ API
 class Client : public std::enable_shared_from_this<Client> {
-private:
+protected:
     static constexpr bool kDebug = true;
 
     Client(std::string applicationId, std::string applicationVersion, const uint8_t sdkType)
@@ -321,6 +321,7 @@ enum class ConnectionState : int {
 
 /// \brief Represents an instance of Tilt Five™ glasses
 class Glasses : public std::enable_shared_from_this<Glasses> {
+protected:
     friend Client;
     friend ParamChangeHelper;
 
@@ -1305,7 +1306,7 @@ public:
 /// \brief Represents an abstract instance of a Tilt Five™ wand
 /// Used with tiltfive::WandStreamHelper
 class Wand {
-private:
+protected:
     T5_WandHandle mHandle;
     std::shared_ptr<WandStreamHelper> mWandStreamHelper;
 

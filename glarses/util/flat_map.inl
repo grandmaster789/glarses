@@ -9,7 +9,7 @@
 #include <ostream>
 #include <iostream>
 
-namespace glarses::util {
+namespace glarses {
 	template <typename K, typename V>
 	V* FlatMap<K, V>::operator[](const K& key) noexcept {
 		auto it = find(m_Keys, key);
@@ -115,7 +115,7 @@ namespace glarses::util {
 
 	template <typename K, typename V>
 	bool FlatMap<K, V>::contains(const K& key) const noexcept {
-		return util::contains(m_Keys, key);
+		return contains(m_Keys, key);
 	}
 
 	template <typename K, typename V>

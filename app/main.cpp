@@ -1,5 +1,8 @@
 #include "glarses.h"
 
+#include "util/memory.h"
+#include "util/detail/linear_allocator.h"
+
 #include <iostream>
 
 int main() {

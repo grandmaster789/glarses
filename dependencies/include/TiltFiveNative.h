@@ -224,6 +224,7 @@ T5_EXPORT void t5DestroyGlasses(T5_Glasses* glasses);
 /// \retval ::T5_ERROR_INVALID_ARGS          `param` was not a valid enumerant
 ///                                          <span class='altMeaning'>or</span>
 ///                                          NULL was supplied for `value`
+/// \retval ::T5_ERROR_TIMEOUT               Timeout waiting to read value.
 /// \retval ::T5_ERROR_IO_FAILURE            Failed to communicate with the service.
 /// \retval ::T5_ERROR_NO_SERVICE            Service is unavailable.
 /// \retval ::T5_ERROR_NO_CONTEXT            `context` is invalid.
@@ -255,6 +256,7 @@ T5_EXPORT T5_Result t5GetSystemIntegerParam(T5_Context context, T5_ParamSys para
 /// \retval ::T5_ERROR_INVALID_ARGS          `param` was not a valid enumerant
 ///                                          <span class='altMeaning'>or</span>
 ///                                          NULL was supplied for `value`
+/// \retval ::T5_ERROR_TIMEOUT               Timeout waiting to read value.
 /// \retval ::T5_ERROR_IO_FAILURE            Failed to communicate with the service.
 /// \retval ::T5_ERROR_NO_SERVICE            Service is unavailable.
 /// \retval ::T5_ERROR_NO_CONTEXT            `context` is invalid.
@@ -295,6 +297,7 @@ T5_EXPORT T5_Result t5GetSystemFloatParam(T5_Context context, T5_ParamSys param,
 ///                                          NULL was supplied for `buffer`
 ///                                          <span class='altMeaning'>or</span>
 ///                                          NULL was supplied for `bufferSize`
+/// \retval ::T5_ERROR_TIMEOUT               Timeout waiting to read value.
 /// \retval ::T5_ERROR_IO_FAILURE            Failed to communicate with the service.
 /// \retval ::T5_ERROR_NO_SERVICE            Service is unavailable.
 /// \retval ::T5_ERROR_NO_CONTEXT            `context` is invalid.
@@ -557,6 +560,7 @@ T5_EXPORT T5_Result t5GetGlassesPose(T5_Glasses glasses,
 /// \param[in]  glasses         - ::T5_Glasses returned by t5CreateGlasses().
 /// \param[in]  graphicsApi     - ::T5_GraphicsApi specifying the graphics API for the glasses.
 /// \param[in]  graphicsContext - Meaning depends on the graphics API in use.
+///                               (Vulkan only: You can free ::T5_GraphicsContextVulkan on return.)
 ///
 /// \retval ::T5_SUCCESS                      The graphics context was successfully initialized.
 /// \retval ::T5_ERROR_INVALID_ARGS           graphicsApi was ::kT5_GraphicsApi_None.
@@ -708,6 +712,54 @@ T5_EXPORT T5_Result t5CancelCamImageBuffer(T5_Glasses glasses, uint8_t* buffer);
 /// \retval ::T5_ERROR_INTERNAL               Internal error - not correctable.
 T5_EXPORT T5_Result t5SendFrameToGlasses(T5_Glasses glasses, const T5_FrameInfo* info);
 
+/// \brief Validate a provided T5_FrameInfo
+///
+/// Determines if the provided T5_FrameInfo is likely valid.
+/// Note that this function <i>does not</i> validate the texture handles beyond checking that they
+/// are not null - the validity of the texture handles is graphics API dependent, and currently
+/// beyond the scope of this function.
+///
+/// If there are errors detected in the ::T5_FrameInfo, ::T5_ERROR_DECODE_ERROR is returned and
+/// a human readable error message will be written to the provided detail buffer explaining the
+/// errors (if there are multiple errors, each will be seperated by a newline).
+///
+/// In the event of a buffer overflow writing to the detail buffer, ::T5_ERROR_OVERFLOW is
+/// returned and the detail message is truncated - Note that in all cases, if detailSize is
+/// greater than 0, a null terminator is written, however if detailSize <i>is</i> 0 nothing
+/// is written to detail and callers should ensure that they do not attempt to use the
+/// (potentially invalid) string.
+///
+/// Note: While this function is lightweight, it is not recommended to call it for every frame
+/// since the validated parameters are unlikely to change between frames. It is also <i>not</i>
+/// necessary to call this function at all - it is a convenience function to sanity check your
+/// inputs.
+///
+/// \par Threading
+/// Exclusivity group 3 & Graphic thread only - Functions in this group must not be called
+/// concurrently from different threads. The calling thread must be the thread that provided the
+/// graphics context.
+///
+/// \param[in]  info          - ::T5_ParamGlasses to get value for.
+/// \param[out] detail        - A buffer to receive a null terminated C string detailing the
+///                             error with the T5_FrameInfo. In the case of ::T5_SUCCESS, an
+///                             empty string will be written.
+/// \param[in,out] detailSize - <b>On Call</b>: Size of the buffer pointed to by `detail`.
+///                             <br/>&nbsp;
+///                             <b>On Return</b>: Size of the message returned in detail including
+///                             the string null terminator. Note that this may be larger than the
+///                             buffer, in which case ::T5_ERROR_OVERFLOW is returned, and this
+///                             value represents the size of the buffer needed to avoid overflow.
+///
+/// \retval ::T5_SUCCESS            The supplied frame info is likely valid.
+/// \retval ::T5_ERROR_NO_CONTEXT   `glasses` is invalid.
+/// \retval ::T5_ERROR_DECODE_ERROR There were errors with the supplied frame info.
+/// \retval ::T5_ERROR_INVALID_ARGS Null was supplied for info, detail or detailSize.
+/// \retval ::T5_ERROR_OVERFLOW     The detail message is larger than the supplied buffer.
+T5_EXPORT T5_Result t5ValidateFrameInfo(T5_Glasses glasses,
+                                        const T5_FrameInfo* info,
+                                        char* detail,
+                                        size_t* detailSize);
+
 /// \defgroup glasses_getParam Glasses parameters
 /// \brief Functions for getting glasses parameters
 
@@ -729,6 +781,7 @@ T5_EXPORT T5_Result t5SendFrameToGlasses(T5_Glasses glasses, const T5_FrameInfo*
 /// \retval ::T5_ERROR_INVALID_ARGS       `param` was not a valid enumerant
 ///                                       <span class='altMeaning'>or</span>
 ///                                       NULL was supplied for `value`
+/// \retval ::T5_ERROR_TIMEOUT            Timeout waiting to read value.
 /// \retval ::T5_ERROR_IO_FAILURE         Failed to communicate with the service.
 /// \retval ::T5_ERROR_NO_SERVICE         Service is unavailable.
 /// \retval ::T5_ERROR_NO_CONTEXT         `context` is invalid.
@@ -762,6 +815,7 @@ T5_EXPORT T5_Result t5GetGlassesIntegerParam(T5_Glasses glasses,
 /// \retval ::T5_ERROR_INVALID_ARGS       `param` was not a valid enumerant
 ///                                       <span class='altMeaning'>or</span>
 ///                                       NULL was supplied for `value`
+/// \retval ::T5_ERROR_TIMEOUT            Timeout waiting to read value.
 /// \retval ::T5_ERROR_IO_FAILURE         Failed to communicate with the service.
 /// \retval ::T5_ERROR_NO_SERVICE         Service is unavailable.
 /// \retval ::T5_ERROR_NO_CONTEXT         `context` is invalid.
@@ -805,6 +859,7 @@ T5_EXPORT T5_Result t5GetGlassesFloatParam(T5_Glasses glasses,
 ///                                       0
 ///                                       <span class='altMeaning'>or</span>
 ///                                       NULL was supplied for `bufferSize`
+/// \retval ::T5_ERROR_TIMEOUT            Timeout waiting to read value.
 /// \retval ::T5_ERROR_IO_FAILURE         Failed to communicate with the service.
 /// \retval ::T5_ERROR_NO_SERVICE         Service is unavailable.
 /// \retval ::T5_ERROR_NO_CONTEXT         `context` is invalid.

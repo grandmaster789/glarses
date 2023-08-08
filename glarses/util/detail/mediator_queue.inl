@@ -39,7 +39,7 @@ namespace glarses::util::detail {
 	void MediatorQueue<T>::detach(H* handler) {
 		LockGuard guard(m_Mutex);
 
-		auto it = util::find(m_SourcePtrs, handler);
+		auto it = find(m_SourcePtrs, handler);
 
 		if (it != std::end(m_SourcePtrs)) {
 			size_t idx = std::distance(std::cbegin(m_SourcePtrs), it);

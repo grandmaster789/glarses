@@ -92,7 +92,54 @@ typedef enum {
 
     /// \brief Direct3D 11 (Windows Only)
     kT5_GraphicsApi_D3D11 = 3,
+
+    /// \brief Vulkan
+    kT5_GraphicsApi_Vulkan = 4,
 } T5_GraphicsApi;
+
+typedef enum {
+    /// \breif Treat ::T5_FrameInfo.leftTexHandle and ::T5_FrameInfo.rightTexHandle as a pair of
+    /// GL_TEXTURE_2D.
+    kT5_GraphicsApi_GL_TextureMode_Pair = 1,
+
+    /// \breif Treat ::T5_FrameInfo.leftTexHandle as a GL_TEXTURE_2D_ARRAY.
+    /// ::T5_FrameInfo.rightTexHandle is unused.
+    ///
+    /// Left/Right array.h index should be specified in ::T5_GraphicsContextGL::leftEyeArrayIndex
+    /// and ::T5_GraphicsContextGL::rightEyeArrayIndex
+    kT5_GraphicsApi_GL_TextureMode_Array = 2,
+} T5_GraphicsApi_GL_TextureMode;
+
+typedef struct {
+    /// \brief Specify the interpretation of the texture handles in ::T5_FrameInfo
+    T5_GraphicsApi_GL_TextureMode textureMode;
+
+    /// \brief In kT5_GraphicsApi_GL_TextureMode_Array, specify the array.h index of the left eye
+    uint32_t leftEyeArrayIndex;
+
+    /// \brief In kT5_GraphicsApi_GL_TextureMode_Array, specify the array.h index of the right eye
+    uint32_t rightEyeArrayIndex;
+} T5_GraphicsContextGL;
+
+typedef struct {
+    /// \brief A pointer to a VkInstance
+    void* instance;
+
+    /// \brief A pointer to a VkPhysicalDevice
+    void* physicalDevice;
+
+    /// \brief A pointer to a VkDevice
+    void* device;
+
+    /// \brief A pointer to a VkQueue
+    ///
+    /// Requirements:
+    ///  * Queue family must support VK_QUEUE_COMPUTE_BIT
+    void* queue;
+
+    /// \brief The queue family index used to create the queue
+    uint32_t queueFamilyIndex;
+} T5_GraphicsContextVulkan;
 
 /// \brief Possible gameboard types
 typedef enum {

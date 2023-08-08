@@ -1,31 +1,32 @@
 {
-  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg/master/scripts/vcpkg.schema.json",
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "glarses",
   "version-string": "0.1.0",
-  "builtin-baseline": "4d878759ad3c6ae2e162e12e0f6cba8df9610865",
+  "builtin-baseline": "501db0f17ef6df184fcdbfbe0f87cde2313b6ab1",
   "dependencies": [
     {
       "name": "fmt",
       "version>=": "9.0.0"
     },
     {
+      "name": "vulkan",
+      "version>=": "1.1.82.1#5"
+    },
+    {
       "name": "glfw3",
       "version>=": "3.3.8"
     },
     {
-      "name": "glew",
-      "version>=": "2.2.0"
+      "name": "stb",
+      "version>=": "2023-04-11#1"
     },
     {
       "name": "glm",
-      "version>=": "0.9.9.8#1"
+      "version>=": "0.9.9.8#2"
     },
     {
-      "name": "stb"
-    },
-    {
-      "name": "gli",
-      "version>=": "2021-07-06"
+      "name": "parallel-hashmap",
+      "version>=": "1.3.8"
     }
   ],
   "features": {

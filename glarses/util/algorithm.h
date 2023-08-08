@@ -5,7 +5,7 @@
 #include <chrono>
 #include <span>
 
-namespace glarses::util {
+namespace glarses {
     template <typename C, typename V>
         requires (std::convertible_to<V, typename C::value_type>)
     auto find(
@@ -32,6 +32,12 @@ namespace glarses::util {
         P        predicate
     );
 
+    template <typename C, typename P = std::less<>>
+    void sort(
+        C& container,
+        P  predicate = {}
+    );
+
     template <typename C>
     C set_difference(
         const C& container_a,
@@ -42,23 +48,6 @@ namespace glarses::util {
     std::vector<T*> weak_copy(const std::vector<std::unique_ptr<T>>& owning_copy);
 
     [[nodiscard]] auto stopwatch(); // measure the time until end-of-scope, print to cout in milliseconds
-
-    // helper to constrain function inputs
-    struct TriviallyCopyableByteSpan:
-        public std::span<const std::byte>
-    {
-        template <typename T>
-        requires std::is_trivially_copyable_v<T>
-        TriviallyCopyableByteSpan(const T& x);
-
-        template <typename T>
-        requires std::is_trivially_copyable_v<T>
-        TriviallyCopyableByteSpan(std::span<T> x);
-
-        template <typename T>
-        requires std::is_trivially_copyable_v<T>
-        TriviallyCopyableByteSpan(std::span<const T> x);
-    };
 }
 
 #include "algorithm.inl"

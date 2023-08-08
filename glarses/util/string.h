@@ -5,7 +5,7 @@
 #include <string_view>
 #include <vector>
 
-namespace glarses::util {
+namespace glarses {
 	// NOTE this does linear traversals for each of the needles
 	template <typename...Ts>
 	[[nodiscard]] std::vector<std::string> split(std::string_view haystack, const Ts&... needles);

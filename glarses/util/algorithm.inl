@@ -6,8 +6,9 @@
 #include <vector>
 #include <array>
 #include <span>
+#include <iostream>
 
-namespace glarses::util {
+namespace glarses {
     template <typename C, typename V>
         requires (std::convertible_to<V, typename C::value_type>)
     auto find(
@@ -56,6 +57,18 @@ namespace glarses::util {
             std::end(container),
             predicate
         ) != std::end(container);
+    }
+
+    template <typename C, typename P>
+    void sort(
+            C& container,
+            P  predicate
+    ) {
+        std::sort(
+            std::begin(container),
+            std::end(container),
+            predicate
+        );
     }
 
     template <typename C>
@@ -111,35 +124,6 @@ namespace glarses::util {
         };
 
         return Timing();
-    }
-
-    template <typename T>
-    requires std::is_trivially_copyable_v<T>
-    TriviallyCopyableByteSpan::TriviallyCopyableByteSpan(const T &x):
-        std::span<const std::byte>(
-            std::as_bytes(
-                std::span(&x, static_cast<size_t>(1))
-            )
-        )
-    {
-    }
-
-    template <typename T>
-    requires std::is_trivially_copyable_v<T>
-    TriviallyCopyableByteSpan::TriviallyCopyableByteSpan(std::span<T> x):
-        std::span<const std::byte>(
-            std::as_bytes(x)
-        )
-    {
-    }
-
-    template <typename T>
-    requires std::is_trivially_copyable_v<T>
-    TriviallyCopyableByteSpan::TriviallyCopyableByteSpan(std::span<const T> x):
-        std::span<const std::byte>(
-            std::as_bytes(x)
-        )
-    {
     }
 }
 

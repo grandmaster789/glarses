@@ -5,7 +5,7 @@
 #include <utility>
 #include <iosfwd>
 
-namespace glarses::util {
+namespace glarses {
 	// Linear mapping, separate key and value storage; should be very fast for small-ish key/value stores
 	// 
 	// [NOTE] key must implement < and == operators (or spaceship); value should be at least moveable

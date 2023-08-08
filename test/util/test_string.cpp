@@ -3,7 +3,7 @@
 
 namespace test {
 	TEST_CASE("split", "util::String") {
-		using namespace glarses::util;
+		using namespace glarses;
 
 		std::string sample = "abc\r\ndef\nghi\nXjkl\r\nmno";
 		sample[13] = '\0'; // replace the 'X' with a null character
