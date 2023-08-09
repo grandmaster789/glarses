@@ -19,6 +19,8 @@ namespace {
                 const glarses::log::LogMessage::MetaInfo& info,
                 const std::string&                        message
         ) noexcept {
+            // NOTE std::chrono::high_resolution_clock is underspecified and doesn't actually give extra resolution
+            //      it's better to use wall time here, but it does make this unsuitable for nanosecond event registration
             auto now = std::chrono::system_clock::now();
 
             auto simplified_source_path = std::filesystem::path(info.m_SourceFile)
@@ -26,13 +28,14 @@ namespace {
                     .string();
 
             m_File
-                    << std::vformat("{0:%T}", std::make_format_args(now))
+                    << std::vformat("{0:%H:%M:%OS}", std::make_format_args(now))
                     << info.m_Category
                     << message
                     << " (" << simplified_source_path
-                    << ": " << info.m_FunctionName
+                    << " @"  << info.m_FunctionName
                     << " [" << info.m_SourceLine << ", " << info.m_SourceColumn
-                    << "])\n";
+                    << "])"
+                    << std::endl; // this is a logging facility -- flush a lot
         }
 
         std::ofstream m_File;

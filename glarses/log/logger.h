@@ -9,6 +9,7 @@
 #include "log_sink.h"
 
 namespace glarses::log {
+    // NOTE each Logger has its own thread to
     class Logger {
     public:
         explicit Logger() = default;
@@ -25,7 +26,7 @@ namespace glarses::log {
 
         // create an associated LogMessage with the appropriate message metadata
         LogMessage operator()(
-                e_LogCategory              category,
+                      e_LogCategory         category,
                 const std::source_location& location
         ) noexcept;
 

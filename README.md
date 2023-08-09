@@ -25,6 +25,8 @@ WIP
 - Mirrored rendering to a window of either eyeglass
 - Wand input
 - Custom AR user interface elements
+- (windows) Crash dump reporting
+- (windows) Stack tracing
 
 TODO
 - Memory model should be updated to PMR style
@@ -32,6 +34,7 @@ TODO
 - coroutine-based task scheduling
 - background I/O operations
 - Simple ECS
+- https://learn.microsoft.com/en-us/windows/win32/gdi/capturing-an-image (see if this is GDI only)
 
 Game engine features:
 - Reasonably multithreaded handling of external devices

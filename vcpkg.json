@@ -28,6 +28,10 @@
       "name": "rang"
     },
     {
+      "name": "boost-stacktrace",
+      "version>=": "1.82.0"
+    },
+    {
       "name": "parallel-hashmap",
       "version>=": "1.3.8"
     }

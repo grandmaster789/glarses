@@ -1,4 +1,5 @@
 #include "active_object.h"
+#include "move_on_copy.h"
 
 namespace glarses {
     std::unique_ptr<ActiveObject> ActiveObject::create() {
@@ -18,6 +19,16 @@ namespace glarses {
 
     void ActiveObject::send(Callback work) {
         m_Work.push(std::forward<Callback>(work));
+    }
+
+    std::future<void> ActiveObject::schedule(Callback work) {
+        std::packaged_task<void()> task(std::move(work));
+
+        auto result = task.get_future();
+
+        m_Work.push(MoveOnCopy(std::move(task)));
+
+        return result;
     }
 
     void ActiveObject::run() {

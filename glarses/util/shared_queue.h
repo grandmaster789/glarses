@@ -19,7 +19,8 @@ namespace glarses {
         SharedQueue             (SharedQueue&&) noexcept = default;
         SharedQueue& operator = (SharedQueue&&) noexcept = default;
 
-        void push(T&& value);
+        void push(const T& value);
+        void push(T&& value) noexcept;
 
         bool try_pop(T& popped);
         void wait_pop(T& popped);

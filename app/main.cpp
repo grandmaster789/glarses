@@ -10,6 +10,8 @@ int main() {
     //   add a (colorized) console output as well
     using namespace glarses;
 
+    os::install_crash_handler();
+
     {
         using namespace glarses::log;
 
@@ -18,20 +20,9 @@ int main() {
 
     g_Log << "Launching";
 
-    try {
-        Application app;
+    Application app;
 
-        app.run();
-    }
-    catch (std::runtime_error& re) {
-        std::cerr << "Runtime error: " << re.what() << '\n';
-    }
-    catch (std::exception& ex) {
-        std::cerr << "Exception thrown: " << ex.what() << '\n';
-    }
-    catch (...) {
-        std::cerr << "Unknown exception thrown\n";
-    }
+    app.run();
 
     g_Log << "Done";
 }

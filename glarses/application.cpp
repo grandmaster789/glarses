@@ -1,6 +1,8 @@
 #include "application.h"
 #include "util/algorithm.h"
 
+#include <chrono>
+
 namespace {
     void glfw_error_callback(int error_code, const char* description) {
         std::cerr << "GLFW error[" << error_code << "]: " << description << '\n';
@@ -22,8 +24,6 @@ namespace glarses {
 	}
 
 	void Application::run() {
-
-
         // create a default window
         m_Windows.emplace_back(1280, 720, "Glarses");
 

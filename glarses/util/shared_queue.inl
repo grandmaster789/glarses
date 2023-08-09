@@ -5,7 +5,17 @@
 
 namespace glarses {
     template <typename T>
-    void SharedQueue<T>::push(T&& value) {
+    void SharedQueue<T>::push(const T& value) {
+        {
+            std::lock_guard guard(m_Mutex);
+            m_Queue.push(value);
+        }
+
+        m_Condition.notify_one();
+    }
+
+    template <typename T>
+    void SharedQueue<T>::push(T&& value) noexcept {
         {
             std::lock_guard guard(m_Mutex);
             m_Queue.push(std::forward<T>(value));

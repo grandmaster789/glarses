@@ -12,7 +12,7 @@ namespace glarses::log {
     }
 
     LogMessage Logger::operator()(
-            e_LogCategory               category,
+                  e_LogCategory         category,
             const std::source_location& location
     ) noexcept {
         return LogMessage(

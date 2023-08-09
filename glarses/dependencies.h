@@ -21,6 +21,16 @@
     #undef GLM_FORCE_RADIANS
 #pragma warning(pop)
 
+#ifdef WIN32
+    #pragma warning(push)
+        #include <windows.h>
+        #include <Dbghelp.h>
+        #include <TlHelp32.h>
+
+        #pragma comment(lib, "dbghelp.lib")
+    #pragma warning(pop)
+#endif
+
 #include "stb_image.h"
 #include "stb_image_write.h"
 

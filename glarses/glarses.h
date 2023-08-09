@@ -7,6 +7,8 @@
 
 #include "log/logger.h"
 
+#include "os/crash_handler.h"
+
 #include "util/algorithm.h"
 #include "util/flat_map.h"
 #include "util/mediator.h"
