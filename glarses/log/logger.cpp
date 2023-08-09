@@ -1,7 +1,13 @@
 #include "logger.h"
 
 namespace glarses::log {
-    Logger::Logger(const std::string& filename) {
+    Logger::Logger() {
+        m_Worker = ActiveObject::create();
+    }
+
+    Logger::Logger(const std::string& filename):
+        Logger()
+    {
         add(makeFileSink(filename));
     }
 
@@ -15,11 +21,11 @@ namespace glarses::log {
                   e_LogCategory         category,
             const std::source_location& location
     ) noexcept {
-        return LogMessage(
+        return {
                 this,
                 category,
                 location
-        );
+        };
     }
 
     void Logger::add(LogSink sink) noexcept {
@@ -35,10 +41,13 @@ namespace glarses::log {
     }
 
     void Logger::flush(LogMessage* message) noexcept {
-        auto info = message->m_MetaInfo;
-        auto str  = message->m_Buffer.str();
-
-        for (auto& sink : m_Sinks)
-            sink.write(info, str);
+        m_Worker->send([
+            info = std::move(message->m_MetaInfo),
+            str  = std::move(message->m_Buffer.str()),
+            this
+        ] {
+            for (auto &sink: m_Sinks)
+                sink.write(info, str);
+        });
     }
 }

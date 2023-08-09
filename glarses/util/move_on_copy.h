@@ -4,7 +4,7 @@
 namespace glarses {
     /*
      * Somewhat sloppy helper, this converts copying operations to move operations,
-     * which helps compatibility with move-only objects
+     * which helps compatibility with move-only objects (intended use is std::packaged_task)
      */
     template <typename T>
     class MoveOnCopy {

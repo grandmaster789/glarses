@@ -17,7 +17,7 @@ namespace {
             CONTEXT*               ctx,
             std::vector<uint64_t>& frame_pointers
     ) {
-        DWORD        machine_type = 0x0;
+        DWORD        machine_type;
         STACKFRAME64 frame        = {};
 
         frame.AddrPC.Mode    = AddrModeFlat;
@@ -280,7 +280,7 @@ namespace {
 
             if (writer_thread) {
                 // suspend all threads except this one
-                applyToThreads(SuspendThread, writer_thread_id);
+                apply_to_all_threads(SuspendThread, writer_thread_id);
 
                 // start the writer thread, wait for it to complete
                 ResumeThread(writer_thread);
@@ -291,7 +291,7 @@ namespace {
                 CloseHandle(writer_thread);
 
                 // resume all threads
-                applyToThreads(ResumeThread, writer_thread_id);
+                apply_to_all_threads(ResumeThread, writer_thread_id);
 
                 if (thread_exit_code)
                     MessageBoxW(
@@ -311,10 +311,10 @@ namespace {
         }
 
     private:
-        void applyToThreads(
+        static void apply_to_all_threads(
                 DWORD(WINAPI* callbackFn)(HANDLE),
                 DWORD         ignore_this_thread_handle
-        ) const {
+        ) {
             // create a snapshot of all other threads in the process, except for the thread
             // identified by the ignore_this_thread_handle parameter
 
@@ -381,7 +381,7 @@ namespace glarses::os {
         // by default, make a stacktrace error message, log it and create a dumpfile
         //
 
-        // signal handlers (SIGFPE, SIGABRT etc) can cause deadlocks, just leave them alone
+        // signal handlers (SIGFPE, SIGABRT etc.) can cause deadlocks, just leave them alone
 
         // install_crash_handler_unhandled_exceptions();
         install_crash_handler_all_exceptions(); // this may lead to false positives, especially when exceptions are used as control flow

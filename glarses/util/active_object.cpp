@@ -14,7 +14,11 @@ namespace glarses {
     }
 
     ActiveObject::~ActiveObject() {
-        send([this] { m_Done = true; });
+        send([this] {
+            m_Done = true;
+        });
+
+        m_Thread.join();
     }
 
     void ActiveObject::send(Callback work) {
