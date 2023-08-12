@@ -22,7 +22,7 @@
 #include "util/mediator.h"
 #include "util/preprocessor.h"
 #include "util/string.h"
-#include "util/time.h"
+#include "util/timing.h"
 #include "util/typemap.h"
 
 #endif

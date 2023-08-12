@@ -4,8 +4,9 @@
 #define GLARSES_UTIL_DETAIL_MEDIATOR_QUEUE_H
 
 #include <mutex>
-#include <functional>
+//#include <functional>
 #include <vector>
+#include "../function.h"
 
 namespace glarses::util::detail {
 	// A MessageHandler is either
@@ -40,7 +41,8 @@ namespace glarses::util::detail {
 
 	private:
 		using Mutex     = std::mutex;
-		using Handler   = std::function<void(const t_Message&)>;
+		//using Handler   = std::function<void(const t_Message&)>;
+        using Handler = Function<void(const t_Message&)>;
 
 		Mutex                m_Mutex;
 		std::vector<Handler> m_Handlers;

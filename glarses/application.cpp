@@ -1,5 +1,6 @@
 #include "application.h"
 #include "util/algorithm.h"
+#include "util/timing.h"
 #include "core/system.h"
 #include "core/engine.h"
 #include "log/logger.h"
@@ -7,9 +8,11 @@
 #include <chrono>
 
 namespace {
-    void glfw_error_callback(int error_code, const char* description) {
+    void glfw_error_callback(int error_code, const char *description) {
         g_LogError << "GLFW error[" << error_code << "]: " << description << '\n';
     }
+
+    glarses::Clock::time_point g_LastTime;
 }
 
 namespace glarses {
@@ -29,8 +32,12 @@ namespace glarses {
 	}
 
     bool Application::init() {
+        System::init();
+
         // create a default window
         m_Windows.emplace_back(1280, 720, "Glarses");
+
+        g_LastTime = time_now();
 
         return true;
     }

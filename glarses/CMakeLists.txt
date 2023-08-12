@@ -1,26 +1,27 @@
 add_library(glarses_lib
-			"glarses.cpp"
+            "glarses.cpp"
 
-			"dependencies.cpp"
-			"application.cpp"
+            "dependencies.cpp"
+            "application.cpp"
 
-			"core/system.cpp"
-			"core/engine.cpp"
+            "core/system.cpp"
+            "core/engine.cpp"
 
-			"io/file.cpp"
-			"io/bitmap.cpp"
+            "io/file.cpp"
+            "io/bitmap.cpp"
 
-			"log/log_category.cpp"
-			"log/log_message.cpp"
-			"log/log_sink.cpp"
-			"log/logger.cpp"
+            "log/log_category.cpp"
+            "log/log_message.cpp"
+            "log/log_sink.cpp"
+            "log/logger.cpp"
 
-			"os/window.cpp"
-			"os/crash_handler_windows.cpp"
+            "os/window.cpp"
+            "os/crash_handler_windows.cpp"
 
-			"util/atomic.cpp"
-			"util/string.cpp"
-			"util/filesystem.cpp"
+            "util/atomic.cpp"
+            "util/string.cpp"
+            "util/filesystem.cpp"
+			util/timing_windows.cpp
 )
 
 # package-based dependencies (vcpkg)

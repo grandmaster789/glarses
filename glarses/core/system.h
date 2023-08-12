@@ -20,6 +20,7 @@ namespace glarses {
     *
     *	Considerations:
     *		Per-system logs? currently everything uses a global log though
+    *       Dependencies are currently string-based, which is not ideal
     */
 
     class System {

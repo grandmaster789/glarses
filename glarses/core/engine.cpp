@@ -1,6 +1,7 @@
 #include "engine.h"
 
 // default subsystems
+#include "../util/timing.h"
 
 #include <stdexcept>
 #include <fstream>
@@ -24,9 +25,11 @@ namespace {
 
 namespace glarses {
     Engine::Engine() {
+        add<Clock>();
     }
 
     Engine::~Engine() {
+        g_Log << "Engine shut down";
     }
 
     Engine& Engine::instance() {
