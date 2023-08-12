@@ -26,9 +26,9 @@ namespace glarses {
     class System {
     private:
         struct JsonProperties {
-            std::string                                m_VariableName;
-            std::function<nlohmann::json()>            m_GetFn;
-            std::function<void(const nlohmann::json&)> m_SetFn;
+            std::string                           m_VariableName;
+            Function<nlohmann::json()>            m_GetFn;
+            Function<void(const nlohmann::json&)> m_SetFn;
         };
 
     public:

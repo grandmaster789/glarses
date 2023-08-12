@@ -5,11 +5,37 @@
 #include <utility>
 
 namespace glarses {
+    // Based on CppWeekly ep 333:
+    //      https://www.youtube.com/watch?v=xJSKk_q25oQ
+    //
+    // NOTE - this resembles Sean Parents' Concept/Implementation style
+    // NOTE - noexcept specifiers are missing (call operator could probably be conditionally noexcept)
+    // NOTE - this is owning, so it can have full value semantics; non-owning may be more efficient
+    // NOTE - constexpr unique_ptr is c++23, which is not fully supported yet on my platform
+    //        this ended up being the reason that this can't be constexpr at the moment
+    // NOTE - small object optimization is missing and this still does heap allocation,
+    //        so this is probably less performant than std::function
+    //
+    //        it is a good starting point for allocator-aware closure storage though
+
     template <typename>
     class Function;
 
     template <typename R, typename...Args>
     class Function<R(Args...)> {
+    public:
+        Function() = default;
+
+        template <typename t_Callable> // can I make a concept for this?
+        Function(t_Callable&& callable) noexcept;
+
+        Function             (const Function& fn);
+        Function& operator = (const Function& fn);
+        Function             (Function&& fn) noexcept;
+        Function& operator = (Function&& fn) noexcept;
+
+        R operator ()(Args&&... args) const;
+
     private:
         struct Interface {
             virtual ~Interface() = default;
@@ -18,65 +44,22 @@ namespace glarses {
             virtual R          call(Args&&...) const = 0;
         };
 
-        template <typename U>
+        template <typename t_Callable>
         struct Implementation:
-                Interface
+            Interface
         {
-            explicit Implementation(U&& callable):
-                m_StoredFunction(std::forward<U>(callable))
-            {
-            }
+            explicit Implementation(t_Callable&& callable);
 
-            Interface* clone() const override {
-                return new Implementation(*this);
-            }
+            Interface* clone()              const override;
+            R          call(Args&&... args) const override;
 
-            R call(Args&&... args) const override {
-                return std::invoke(
-                        m_StoredFunction,
-                        std::forward<Args>(args)...
-                );
-            }
-
-            U m_StoredFunction;
+            t_Callable m_StoredFunction;
         };
 
-    public:
-        Function() = default;
-
-        template <typename U>
-        Function(U&& callable) noexcept:
-            m_Storage(new Implementation<U>(std::forward<U>(callable)))
-        {
-        }
-
-        Function (const Function& fn):
-            m_Storage(fn.m_Storage->clone())
-        {
-        }
-
-        Function& operator = (const Function& fn) {
-            m_Storage.reset(fn.m_Storage->clone());
-            return *this;
-        }
-
-        Function (Function&& fn) noexcept:
-            m_Storage(std::move(fn.m_Storage))
-        {
-        }
-
-        Function& operator = (Function&& fn) noexcept {
-            m_Storage = std::move(fn.m_Storage);
-            return *this;
-        }
-
-        R operator ()(Args&&... args) const {
-            return m_Storage->call(std::forward<Args>(args)...);
-        }
-
-    private:
         std::unique_ptr<Interface> m_Storage;
     };
 }
+
+#include "function.inl"
 
 #endif
