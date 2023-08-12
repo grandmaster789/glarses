@@ -1,7 +1,11 @@
 add_library(glarses_lib
 			"glarses.cpp"
+
 			"dependencies.cpp"
 			"application.cpp"
+
+			"core/system.cpp"
+			"core/engine.cpp"
 
 			"io/file.cpp"
 			"io/bitmap.cpp"
@@ -12,19 +16,11 @@ add_library(glarses_lib
 			"log/logger.cpp"
 
 			"os/window.cpp"
+			"os/crash_handler_windows.cpp"
 
 			"util/atomic.cpp"
-			"util/active_object.cpp"
 			"util/string.cpp"
 			"util/filesystem.cpp"
-			"util/detail/memory_statistics.cpp"
-			"util/detail/heap_allocator.cpp"
-			"util/detail/stack_allocator.cpp"
-			"util/detail/double_stack_allocator.cpp"
-			"util/detail/linear_allocator.cpp"
-			"util/detail/mallocator.cpp"
-			"util/memory.cpp"
-			"os/crash_handler_windows.cpp"
 )
 
 # package-based dependencies (vcpkg)
@@ -32,8 +28,9 @@ find_package(fmt CONFIG REQUIRED)
 find_package(glfw3 CONFIG REQUIRED)
 find_package(Vulkan REQUIRED)
 find_package(glm CONFIG REQUIRED)
-find_package(Boost REQUIRED)
 find_package(Stb REQUIRED)
+find_package(nlohmann_json CONFIG REQUIRED)
+find_package(unofficial-concurrentqueue CONFIG REQUIRED)
 
 find_path(VULKAN_INCLUDE vulkan/vulkan.h PATH "$ENV{VULKAN_SDK}/include")
 find_path(RANG_INCLUDE_DIRS "rang.hpp")
@@ -45,7 +42,6 @@ target_include_directories(glarses_lib PUBLIC
 	${Stb_INCLUDE_DIR}
 	${VULKAN_INCLUDE}
 	${RANG_INCLUDE_DIRS}
-	${Boost_INCLUDE_DIRS}
 	${PARALLEL_HASHMAP_INCLUDE_DIRS}
 )
 
@@ -70,4 +66,6 @@ target_link_libraries(glarses_lib PUBLIC
 	glm::glm
 	TiltFiveNative
 	glarses_dependencies
+	nlohmann_json::nlohmann_json
+	unofficial::concurrentqueue::concurrentqueue
 )

@@ -30,11 +30,13 @@ WIP
 
 TODO
 - Memory model should be updated to PMR style
+  - maybe mimalloc would be nice: // https://github.com/microsoft/mimalloc
 - Plugin architecture with hot reloading
 - coroutine-based task scheduling
 - background I/O operations
 - Simple ECS
 - https://learn.microsoft.com/en-us/windows/win32/gdi/capturing-an-image (see if this is GDI only)
+- this seems promising: https://gitlab.com/ribtoks/chillout
 
 Game engine features:
 - Reasonably multithreaded handling of external devices

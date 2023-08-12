@@ -9,30 +9,24 @@ namespace glarses {
     template <typename Fn>
     class Defer {
     public:
-        Defer() = delete;
-        ~Defer() {
-            if (m_Callback)
-                (*m_Callback)();
-        }
+        Defer() = default;
+        ~Defer();
 
-        explicit Defer(Fn&& callback):
-            m_Callback(std::forward<Fn>(callback))
-        {
-        }
+        explicit Defer(Fn&& callback);
 
         Defer             (const Defer&)     = delete;
         Defer& operator = (const Defer&)     = delete;
-        Defer             (Defer&&) noexcept = delete;
-        Defer& operator = (Defer&&) noexcept = delete;
+        Defer             (Defer&& d) noexcept;
+        Defer& operator = (Defer&& d) noexcept;
 
     private:
         std::optional<Fn> m_Callback;
     };
 
     template <typename Fn>
-    [[nodiscard]] Defer<Fn> defer(Fn&& callback) {
-        return Defer(std::forward<Fn>(callback));
-    }
+    [[nodiscard]] Defer<Fn> defer(Fn&& callback);
 }
+
+#include "defer.inl"
 
 #endif

@@ -51,8 +51,8 @@ namespace glarses {
 	}
 
 	std::string concat(
-		const std::vector<std::string>& parts, 
-		std::string_view                separator
+		const std::vector<std::string>& parts,
+		std::string_view     separator
 	) {
 		size_t total = 0;
 
@@ -73,8 +73,8 @@ namespace glarses {
 	}
 
 	std::string concat(
-		const std::vector<const char*>& parts, 
-		std::string_view                separator
+		const std::vector<const char*>& parts,
+		std::string_view          separator
 	) {
 		size_t total = 0;
 
@@ -95,8 +95,8 @@ namespace glarses {
 	}
 
 	std::string concat(
-		const std::vector<std::string_view>& parts, 
-		std::string_view                     separator
+		const std::vector<std::string_view>& parts,
+		std::string_view               separator
 	) {
 		size_t total = 0;
 

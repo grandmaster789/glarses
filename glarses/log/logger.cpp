@@ -1,10 +1,10 @@
 #include "logger.h"
 
-namespace glarses::log {
-    Logger::Logger() {
-        m_Worker = ActiveObject::create();
-    }
+namespace {
+    glarses::log::Logger g_GlobalLogger("glarses.log");
+}
 
+namespace glarses::log {
     Logger::Logger(const std::string& filename):
         Logger()
     {
@@ -13,8 +13,7 @@ namespace glarses::log {
 
     // this class provides a singleton interface, but can also be used as a regular object
     Logger& Logger::instance() noexcept {
-        static Logger global_logger("glarses.log");
-        return global_logger;
+        return g_GlobalLogger;
     }
 
     LogMessage Logger::operator()(
@@ -41,13 +40,10 @@ namespace glarses::log {
     }
 
     void Logger::flush(LogMessage* message) noexcept {
-        m_Worker->send([
-            info = std::move(message->m_MetaInfo),
-            str  = std::move(message->m_Buffer.str()),
-            this
-        ] {
-            for (auto &sink: m_Sinks)
-                sink.write(info, str);
-        });
+        auto info = std::move(message->m_MetaInfo);
+        auto str  = std::move(message->m_Buffer.str());
+
+        for (auto &sink: m_Sinks)
+            sink.write(info, str);
     }
 }

@@ -7,21 +7,20 @@
 
 #include "log_category.h"
 #include "log_sink.h"
-#include "../util/active_object.h"
 
 namespace glarses::log {
     // NOTE each Logger has its own thread to write data with
     class Logger {
     public:
-        Logger();
-        explicit Logger(const std::string& filename); // log both to a file and to std::cout
+        Logger() = default; // no sinks by default
+        explicit Logger(const std::string& filename); // log to a file
 
         // this class provides a singleton interface, but can also be used as a regular object
         static Logger& instance() noexcept;
 
-        void   add(LogSink sink) noexcept;
-        void   removeAll() noexcept;
-        size_t getNumSinks() const noexcept;
+                      void   add(LogSink sink) noexcept;
+                      void   removeAll() noexcept;
+        [[nodiscard]] size_t getNumSinks() const noexcept;
 
         void flush(LogMessage* message) noexcept;
 
@@ -32,7 +31,6 @@ namespace glarses::log {
         ) noexcept;
 
     private:
-        std::unique_ptr<ActiveObject> m_Worker;
         std::vector<LogSink>          m_Sinks;
     };
 }

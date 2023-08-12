@@ -68,7 +68,7 @@ namespace glarses {
 
 	template <typename... Ts>
 	[[nodiscard]]
-    std::string stringify(const Ts&... args) {
+	std::string stringify(const Ts&... args) {
 		// NOTE const& by default is ok, but may be a pessimization for small types
 		// NOTE stringstream is suboptimal but pretty convenient
 

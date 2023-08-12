@@ -27,15 +27,16 @@ namespace {
                     .filename()
                     .string();
 
-            m_File
-                    << std::vformat("{0:%H:%M:%OS}", std::make_format_args(now))
-                    << info.m_Category
-                    << message
-                    << " (" << simplified_source_path
-                    << " @"  << info.m_FunctionName
-                    << " [" << info.m_SourceLine << ", " << info.m_SourceColumn
-                    << "])"
-                    << std::endl; // this is a logging facility -- flush a lot
+            if (m_File.good())
+                m_File
+                << std::vformat("{0:%H:%M:%OS}", std::make_format_args(now))
+                << info.m_Category
+                << message
+                << " (" << simplified_source_path
+                << " @" << info.m_FunctionName
+                << " [" << info.m_SourceLine << ", " << info.m_SourceColumn
+                << "])\n";
+                //    << std::endl; // this is a logging facility -- flush a lot
         }
 
         std::ofstream m_File;

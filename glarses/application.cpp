@@ -1,16 +1,21 @@
 #include "application.h"
 #include "util/algorithm.h"
+#include "core/system.h"
+#include "core/engine.h"
+#include "log/logger.h"
 
 #include <chrono>
 
 namespace {
     void glfw_error_callback(int error_code, const char* description) {
-        std::cerr << "GLFW error[" << error_code << "]: " << description << '\n';
+        g_LogError << "GLFW error[" << error_code << "]: " << description << '\n';
     }
 }
 
 namespace glarses {
-	Application::Application() {
+	Application::Application():
+        System("Glarses")
+    {
         // GLFW initialization https://www.glfw.org/docs/3.3/intro_guide.html
 
         glfwSetErrorCallback(glfw_error_callback);
@@ -23,17 +28,22 @@ namespace glarses {
         glfwTerminate();
 	}
 
-	void Application::run() {
+    bool Application::init() {
         // create a default window
         m_Windows.emplace_back(1280, 720, "Glarses");
 
-        // overall application loop
-        while (!m_Windows.empty()) {
-            glfwPollEvents();
+        return true;
+    }
 
-            std::erase_if(m_Windows, [](const os::Window& w) {
-                return w.should_close();
-            });
-        }
+	void Application::update() {
+        // overall application loop
+        glfwPollEvents();
+
+        std::erase_if(m_Windows, [](const os::Window& w) {
+            return w.should_close();
+        });
+
+        if (m_Windows.empty())
+            m_Engine->stop();
 	}
 }

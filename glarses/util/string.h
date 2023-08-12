@@ -22,7 +22,7 @@ namespace glarses {
 
 	// NOTE uses << operator to stringify individual arguments
 	template <typename... Ts>
-	[[nodiscard]] std::string stringify(const Ts&... args); 
+	[[nodiscard]] std::string stringify(const Ts&... args);
 
 	// NOTE these again assume ASCII-style strings, unicode is a lot more complicated
 	[[nodiscard]] constexpr bool is_upper     (char c) noexcept; // A-Z

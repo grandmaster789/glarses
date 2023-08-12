@@ -5,29 +5,23 @@
 
 #include "mediator_queue.h"
 #include "../algorithm.h"
-#include <iostream>
+#include "../../log/logger.h"
 
 namespace glarses::util::detail {
 	template <typename T>
-	MediatorQueue<T>& MediatorQueue<T>::instance() {
-		static MediatorQueue mq; // This ends up creating a specific queue for each template instance
-		return mq;
-	}
-
-	template <typename T>
 	template <typename H>
 	void MediatorQueue<T>::attach(H* handler) {
-		LockGuard guard(m_Mutex);
+		std::lock_guard guard(m_Mutex);
 
 		m_Handlers.push_back([handler](const T& message) {
 			try {
 				(*handler)(message);
 			}
 			catch (std::exception& ex) {
-				std::cerr << "Handler exception: " << ex.what() << '\n';
+				g_LogError << "Handler exception: " << ex.what();
 			}
 			catch (...) {
-				std::cerr << "Handler exception [unspecified]\n";
+				g_LogError << "Handler exception [unspecified]";
 			}
 		});
 
@@ -37,7 +31,7 @@ namespace glarses::util::detail {
 	template <typename T>
 	template <typename H>
 	void MediatorQueue<T>::detach(H* handler) {
-		LockGuard guard(m_Mutex);
+        std::lock_guard guard(m_Mutex);
 
 		auto it = find(m_SourcePtrs, handler);
 
@@ -48,12 +42,12 @@ namespace glarses::util::detail {
 			m_Handlers.erase(std::begin(m_Handlers) + idx);
 		}
 		else
-			std::cerr << "Tried to remove an unregistered handler\n";
+			g_LogError << "Tried to remove an unregistered handler";
 	}
 
 	template <typename T>
 	void MediatorQueue<T>::detach_all() {
-		LockGuard guard(m_Mutex);
+        std::lock_guard guard(m_Mutex);
 
 		m_SourcePtrs.clear();
 		m_Handlers.clear();
@@ -64,13 +58,11 @@ namespace glarses::util::detail {
 		decltype(m_Handlers) local_copy;
 
 		{
-			LockGuard guard(m_Mutex);
+            std::lock_guard guard(m_Mutex);
 			local_copy = m_Handlers;
 		}
 
-		// by using a local copy of the list we allow
-		// handlers to mutate the set (typically by removing 
-		// themselves from the set)
+		// by using a local copy of the list we allow  handlers to mutate the set (typically by removing  themselves from the set)
 		for (const auto& handler : local_copy)
 			handler(message);
 	}

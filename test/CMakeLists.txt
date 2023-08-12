@@ -11,7 +11,6 @@ add_executable(
         "io/test_file.cpp"
         "io/test_bitmap.cpp"
         "util/test_string.cpp"
-        "util/test_array.cpp"
 )
 
 target_include_directories(unittest PUBLIC ../glarses)
