@@ -3,6 +3,10 @@ cmake_minimum_required(VERSION 3.15)
 find_package(Catch2 3 REQUIRED)
 include(Catch)
 
+add_executable(unittest_util_test_process_binary
+        "util/test_process_binary.cpp"
+)
+
 add_executable(
         unittest
 
@@ -11,6 +15,7 @@ add_executable(
         "io/test_file.cpp"
         "io/test_bitmap.cpp"
         "util/test_string.cpp"
+        "util/test_process_windows.cpp"
 )
 
 target_include_directories(unittest PUBLIC ../glarses)

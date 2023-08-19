@@ -1,10 +1,9 @@
-#pragma once
-
 #ifndef GLARSES_UTIL_STRING_INL
 #define GLARSES_UTIL_STRING_INL
 
 #include "string.h"
 #include <sstream>
+#include <algorithm>
 
 namespace glarses::util::detail {
 	template <
@@ -124,6 +123,19 @@ namespace glarses {
 			(c == '\t') || // tab
 			is_linefeed(c);
 	}
+
+    [[nodiscard]] constexpr std::string trim(const std::string& s) noexcept {
+        size_t start = 0;
+        size_t end   = s.size() - 1;
+
+        while (is_whitespace(s[start]) && start < end)
+            ++start;
+
+        while (is_whitespace(s[end]) && end > start)
+            --end;
+
+        return s.substr(start, end - start + 1);
+    }
 }
 
 #endif

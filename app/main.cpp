@@ -1,5 +1,7 @@
 #include "glarses.h"
 
+#include "util/process.h"
+
 int main() {
     // by default the global logger just writes to a file --
     //   add a (colorized) console output as well

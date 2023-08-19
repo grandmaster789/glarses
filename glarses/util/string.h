@@ -32,6 +32,8 @@ namespace glarses {
 	[[nodiscard]] constexpr bool is_alphanum  (char c) noexcept; // A-Z  || a-z  || 0-9
 	[[nodiscard]] constexpr bool is_linefeed  (char c) noexcept; // '\n' || '\r' || '\f' || '\v'
 	[[nodiscard]] constexpr bool is_whitespace(char c) noexcept; // ' '  || '\t' || linefeed
+
+    [[nodiscard]] constexpr std::string trim(const std::string& s) noexcept;
 }
 
 #include "string.inl"

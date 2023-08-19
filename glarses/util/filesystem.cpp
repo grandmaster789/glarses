@@ -95,10 +95,9 @@ namespace glarses {
     ) {
         return
             std::filesystem::exists(p) &&
-            std::filesystem::is_block_file(p);
+            std::filesystem::is_regular_file(p);
     }
 
-    // unit test facility functions (should probably not be used in production)
     size_t file_size(
         const std::filesystem::path& p
     ) {

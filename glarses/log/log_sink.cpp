@@ -69,7 +69,8 @@ namespace glarses::log {
             std::cout
                 << info.m_Category
                 << message
-                << " (" << info.m_FunctionName << ")\n";
+                << '\n';
+                //<< " (" << info.m_FunctionName << ")\n";
 
             std::cout << rang::style::reset;
         };

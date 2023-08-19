@@ -21,7 +21,9 @@ add_library(glarses_lib
             "util/atomic.cpp"
             "util/string.cpp"
             "util/filesystem.cpp"
-			util/timing_windows.cpp
+            util/timing_windows.cpp
+            util/process_windows.cpp
+            util/process.cpp
 )
 
 # package-based dependencies (vcpkg)
