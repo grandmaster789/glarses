@@ -21,7 +21,7 @@
 #include "util/flat_map.h"
 #include "util/mediator.h"
 #include "util/preprocessor.h"
-#include "util/string.h"
+#include "util/string_util.h"
 #include "util/timing.h"
 #include "util/typemap.h"
 

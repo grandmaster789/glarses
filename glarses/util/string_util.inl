@@ -1,7 +1,7 @@
 #ifndef GLARSES_UTIL_STRING_INL
 #define GLARSES_UTIL_STRING_INL
 
-#include "string.h"
+#include "string_util.h"
 #include <sstream>
 #include <algorithm>
 
@@ -17,11 +17,11 @@ namespace glarses::util::detail {
 		const t_Tail&... needle_tail
 	) noexcept {
 		size_t first = haystack.find(needle_head, offset); // https://en.cppreference.com/w/cpp/string/basic_string_view/find
-		size_t last = first + 1;
+		size_t last  = first + std::string_view(needle_head).size();
 
 		if (first == std::string_view::npos) {
 			first = haystack.size();
-			last = haystack.size();
+			last  = haystack.size();
 		}
 
 		if constexpr (sizeof...(t_Tail) != 0) {
@@ -43,7 +43,6 @@ namespace glarses::util::detail {
 
 namespace glarses {
 	template <typename...Ts>
-    [[nodiscard]]
 	std::vector<std::string> split(
 		std::string_view haystack,
 		const Ts&...     needles
@@ -66,7 +65,6 @@ namespace glarses {
 	}
 
 	template <typename... Ts>
-	[[nodiscard]]
 	std::string stringify(const Ts&... args) {
 		// NOTE const& by default is ok, but may be a pessimization for small types
 		// NOTE stringstream is suboptimal but pretty convenient
@@ -78,37 +76,37 @@ namespace glarses {
 		return result.str();
 	}
 
-	[[nodiscard]] constexpr bool is_upper(char c) noexcept {
+	constexpr bool is_upper(char c) noexcept {
 		return 
 			(c >= 'A') && 
 			(c <= 'Z');
 	}
 
-	[[nodiscard]] constexpr bool is_lower(char c) noexcept {
+	constexpr bool is_lower(char c) noexcept {
 		return
 			(c >= 'a') &&
 			(c <= 'z');
 	}
 
-	[[nodiscard]] constexpr bool is_alpha(char c) noexcept {
+	constexpr bool is_alpha(char c) noexcept {
 		return 
 			is_upper(c) || 
 			is_lower(c);
 	}
 
-	[[nodiscard]] constexpr bool is_digit(char c) noexcept {
+	constexpr bool is_digit(char c) noexcept {
 		return
 			(c >= '0') &&
 			(c <= '9');
 	}
 
-	[[nodiscard]] constexpr bool is_alphanum(char c) noexcept {
+	constexpr bool is_alphanum(char c) noexcept {
 		return
 			is_alpha(c) ||
 			is_digit(c);
 	}
 
-	[[nodiscard]] constexpr bool is_linefeed(char c) noexcept {
+	constexpr bool is_linefeed(char c) noexcept {
 		// https://en.cppreference.com/w/cpp/language/escape
 		return
 			(c == '\n') ||	// new line        (should be the most common by far)
@@ -117,14 +115,14 @@ namespace glarses {
 			(c == '\v');	// vertical tab    (exceedingly rare, I've never seen this in the wild)
 	}
 
-	[[nodiscard]] constexpr bool is_whitespace(char c) noexcept {
+	constexpr bool is_whitespace(char c) noexcept {
 		return
 			(c == ' ') || // space
 			(c == '\t') || // tab
 			is_linefeed(c);
 	}
 
-    [[nodiscard]] constexpr std::string trim(const std::string& s) noexcept {
+    constexpr std::string_view trim(std::string_view s) noexcept {
         size_t start = 0;
         size_t end   = s.size() - 1;
 
@@ -136,6 +134,38 @@ namespace glarses {
 
         return s.substr(start, end - start + 1);
     }
+
+    constexpr std::string align_string(
+            std::string_view sv,
+            size_t           num_characters,
+            std::string_view delimiter_sequence
+    ) noexcept {
+        std::string result;
+        result.reserve(sv.size() + sv.size() * delimiter_sequence.size() / num_characters);
+
+        size_t pass      = 0;
+        size_t remaining = sv.size();
+
+        while (remaining > 0) {
+            // if we're at the last pass, just add the last bit and we're done
+            if (std::min(remaining, num_characters) == remaining) {
+                result += sv.substr(pass * num_characters);
+                return result;
+            }
+
+            // any other pass we need to append the given number of characters together with the delimiter sequence
+            result += sv.substr(pass * num_characters, num_characters);
+            result += delimiter_sequence;
+
+            remaining -= num_characters;
+            ++pass;
+        }
+
+		// only reaches here if the input string was empty to begin with
+		return result;
+    }
+
+
 }
 
 #endif

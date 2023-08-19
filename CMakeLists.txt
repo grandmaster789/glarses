@@ -27,6 +27,7 @@ if (WIN32)
 	add_definitions(-DWIN32_LEAN_AND_MEAN)     # disable many includes from <windows.h>
 	add_definitions(-D_CRT_SECURE_NO_WARNINGS) # allow printf and friends (at least the secure versions)
 	add_definitions(-D_USE_MATH_DEFINES)       # mostly to define the M_PI macro
+	add_definitions(-DNOMINMAX)                # don't define min/max macros plx
 	
 	add_compile_options("/MP")          # build with multiple processes
 	add_compile_options("/W4")          # high warning level warnings

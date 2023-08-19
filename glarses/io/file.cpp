@@ -1,5 +1,5 @@
 #include "file.h"
-#include "../util/string.h"
+#include "../util/string_util.h"
 #include <fstream>
 
 namespace glarses::io {

@@ -3,7 +3,7 @@
 #include "../unittest.h"
 #include "util/process.h"
 #include "util/filesystem.h"
-#include "util/string.h"
+#include "util/string_util.h"
 #include <iostream>
 
 namespace test {

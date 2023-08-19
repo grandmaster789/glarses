@@ -19,7 +19,7 @@ add_library(glarses_lib
             "os/crash_handler_windows.cpp"
 
             "util/atomic.cpp"
-            "util/string.cpp"
+            "util/string_util.cpp"
             "util/filesystem.cpp"
             util/timing_windows.cpp
             util/process_windows.cpp

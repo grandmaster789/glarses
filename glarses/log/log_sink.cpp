@@ -1,5 +1,6 @@
 #include "log_sink.h"
 #include "../dependencies.h"
+#include "../util/string_util.h"
 
 #include <iostream>
 #include <fstream>
@@ -20,23 +21,52 @@ namespace {
                 const std::string&                        message
         ) noexcept {
             // NOTE std::chrono::high_resolution_clock is underspecified and doesn't actually give extra resolution
-            //      it's better to use wall time here, but it does make this unsuitable for nanosecond event registration
+            //      it's better to use wall time here, but it does make this unsuitable for nanosecond event registration.
+            //      We could make use of the project specific high resolution clock, but for logging purposes this seems
+            //      fine.
             auto now = std::chrono::system_clock::now();
 
             auto simplified_source_path = std::filesystem::path(info.m_SourceFile)
                     .filename()
                     .string();
 
+            std::stringstream first_part;
+            std::stringstream last_part;
+
+            // use some filler to (mostly) line up the source information better
+            static constexpr size_t k_function_name_filler = 16;
+            std::string simplified_source_filler;
+
+            if (simplified_source_path.size() < k_function_name_filler)
+                simplified_source_filler = std::string(k_function_name_filler - simplified_source_path.size(), ' ');
+
+            first_part
+                    << std::vformat("{0:%H:%M:%OS}", std::make_format_args(now))
+                    << info.m_Category
+                    << message;
+
+            // remove mostly unhelpful decorators from the function name
+            auto simplified_function_name = glarses::replace_string(info.m_FunctionName, "__cdecl ");
+
+            last_part
+                    << "(" << simplified_source_path << simplified_source_filler
+                    << " @" << simplified_function_name
+                    << " [" << info.m_SourceLine << ", " << info.m_SourceColumn
+                    << "])";
+
+            // first part should aligned; we're trying to keep 'normal' usage to about 80 character aligned
+            // and the last part is around 20 characters, so we're left with 60
+            static constexpr size_t k_text_alignment = 60;
+
+            auto aligned   = glarses::align_string(first_part.str(), k_text_alignment);
+            auto filler    = std::string(k_text_alignment - aligned.size() % k_text_alignment, ' ');
+
             if (m_File.good())
                 m_File
-                << std::vformat("{0:%H:%M:%OS}", std::make_format_args(now))
-                << info.m_Category
-                << message
-                << " (" << simplified_source_path
-                << " @" << info.m_FunctionName
-                << " [" << info.m_SourceLine << ", " << info.m_SourceColumn
-                << "])\n";
-                //    << std::endl; // this is a logging facility -- flush a lot
+                << aligned
+                << filler
+                << last_part.str()
+                << std::endl; // this is a logging facility -- flush a lot
         }
 
         std::ofstream m_File;

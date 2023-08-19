@@ -9,6 +9,8 @@ namespace glarses {
 	// NOTE this does linear traversals for each of the needles
 	template <typename...Ts>
 	[[nodiscard]] std::vector<std::string> split(std::string_view haystack, const Ts&... needles);
+	[[nodiscard]] std::vector<std::string> split_string(std::string_view haystack, std::string_view needle);
+
 
 	// NOTE these only do ASCII-style upper/lower casing. Full Unicode support is too complex for this project
 	[[nodiscard]] std::string to_lower(std::string_view sv) noexcept;
@@ -33,9 +35,20 @@ namespace glarses {
 	[[nodiscard]] constexpr bool is_linefeed  (char c) noexcept; // '\n' || '\r' || '\f' || '\v'
 	[[nodiscard]] constexpr bool is_whitespace(char c) noexcept; // ' '  || '\t' || linefeed
 
-    [[nodiscard]] constexpr std::string trim(const std::string& s) noexcept;
+    [[nodiscard]] constexpr std::string_view trim        (std::string_view sv) noexcept;
+    [[nodiscard]] constexpr std::string      align_string(
+            std::string_view sv,
+            size_t           num_characters     = 80,
+            std::string_view delimiter_sequence = "\n\t"
+    ) noexcept;
+
+	[[nodiscard]] std::string replace_string(
+			std::string_view haystack,
+			std::string_view needle,
+			std::string_view replacement = ""
+	);
 }
 
-#include "string.inl"
+#include "string_util.inl"
 
 #endif

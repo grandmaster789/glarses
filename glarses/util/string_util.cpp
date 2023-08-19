@@ -1,4 +1,4 @@
-#include "string.h"
+#include "string_util.h"
 
 namespace glarses {
 	std::string to_lower(std::string_view sv) noexcept {
@@ -114,5 +114,13 @@ namespace glarses {
 		}
 
 		return result;
+	}
+
+	std::string replace_string(
+			std::string_view haystack,
+			std::string_view needle,
+			std::string_view replacement
+	) {
+		return concat(split(haystack, needle), replacement);
 	}
 }

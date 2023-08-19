@@ -1,6 +1,6 @@
 #include "../unittest.h"
 #include "io/file.h"
-#include "util/string.h"
+#include "util/string_util.h"
 
 namespace test {
 	TEST_CASE("write_read_text", "io::File") {
