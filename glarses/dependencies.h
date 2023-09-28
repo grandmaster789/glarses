@@ -75,4 +75,13 @@ namespace glm {
     std::ostream& operator << (std::ostream& os, const quat& q);
 }
 
+// somehow these still are defined sometimes
+#ifdef min
+#undef min
+#endif
+
+#ifdef max
+#undef max
+#endif
+
 #endif

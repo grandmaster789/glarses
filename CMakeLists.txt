@@ -22,12 +22,13 @@ project(glarses
 )
 
 # these flags are only supported by the MSVC compiler - at some point we'll add linux/android variants
-if (WIN32)
+if ($<PLATFORM_ID:Windows>)
 	add_definitions(-DUNICODE -D_UNICODE)      # try to use unicode support
 	add_definitions(-DWIN32_LEAN_AND_MEAN)     # disable many includes from <windows.h>
 	add_definitions(-D_CRT_SECURE_NO_WARNINGS) # allow printf and friends (at least the secure versions)
 	add_definitions(-D_USE_MATH_DEFINES)       # mostly to define the M_PI macro
 	add_definitions(-DNOMINMAX)                # don't define min/max macros plx
+	add_definitions(-DPLATFORM_WINDOWS=1)      # tag the platform as a testable macro value
 	
 	add_compile_options("/MP")          # build with multiple processes
 	add_compile_options("/W4")          # high warning level warnings

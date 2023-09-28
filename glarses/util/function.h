@@ -34,7 +34,12 @@ namespace glarses {
         Function             (Function&& fn) noexcept;
         Function& operator = (Function&& fn) noexcept;
 
+        Function             (std::nullptr_t);
+        Function& operator = (std::nullptr_t) noexcept;
+
         R operator ()(Args&&... args) const;
+
+        explicit operator bool() const noexcept;
 
     private:
         struct Interface {

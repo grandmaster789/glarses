@@ -36,8 +36,23 @@ namespace glarses {
     }
 
     template <typename R, typename...Args>
+    Function<R(Args...)>::Function(std::nullptr_t) {
+    }
+
+    template <typename R, typename...Args>
+    Function<R(Args...)>& Function<R(Args...)>::operator = (std::nullptr_t) noexcept {
+        m_Storage.reset();
+        return *this;
+    }
+
+    template <typename R, typename...Args>
     R Function<R(Args...)>::operator()(Args&&... args) const {
         return m_Storage->call(std::forward<Args>(args)...);
+    }
+
+    template <typename R, typename...Args>
+    Function<R(Args...)>::operator bool() const noexcept {
+        return m_Storage != nullptr;
     }
 
     template <typename R, typename...Args>

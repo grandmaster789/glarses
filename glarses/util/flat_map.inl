@@ -159,7 +159,7 @@ namespace glarses {
 
 	template <typename K, typename V>
 	template <typename Fn>
-	void FlatMap<K, V>::foreach(Fn callback) const {
+	void FlatMap<K, V>::foreach(Fn callback) {
 		for (size_t i = 0; i < m_Keys.size(); ++i)
 			callback(m_Keys[i], m_Values[i]);
 	}

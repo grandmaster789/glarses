@@ -105,7 +105,7 @@ typedef enum {
     /// \breif Treat ::T5_FrameInfo.leftTexHandle as a GL_TEXTURE_2D_ARRAY.
     /// ::T5_FrameInfo.rightTexHandle is unused.
     ///
-    /// Left/Right array.h index should be specified in ::T5_GraphicsContextGL::leftEyeArrayIndex
+    /// Left/Right array index should be specified in ::T5_GraphicsContextGL::leftEyeArrayIndex
     /// and ::T5_GraphicsContextGL::rightEyeArrayIndex
     kT5_GraphicsApi_GL_TextureMode_Array = 2,
 } T5_GraphicsApi_GL_TextureMode;
@@ -114,10 +114,10 @@ typedef struct {
     /// \brief Specify the interpretation of the texture handles in ::T5_FrameInfo
     T5_GraphicsApi_GL_TextureMode textureMode;
 
-    /// \brief In kT5_GraphicsApi_GL_TextureMode_Array, specify the array.h index of the left eye
+    /// \brief In kT5_GraphicsApi_GL_TextureMode_Array, specify the array index of the left eye
     uint32_t leftEyeArrayIndex;
 
-    /// \brief In kT5_GraphicsApi_GL_TextureMode_Array, specify the array.h index of the right eye
+    /// \brief In kT5_GraphicsApi_GL_TextureMode_Array, specify the array index of the right eye
     uint32_t rightEyeArrayIndex;
 } T5_GraphicsContextGL;
 

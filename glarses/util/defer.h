@@ -4,8 +4,11 @@
 #include <optional>
 
 namespace glarses {
-    // Fn must be callable void() type
+    // Run something upon scope exit
+    // template Fn must be callable void() type
     //
+    // Simplest way to use this is to provide a lambda, for example:
+    //    auto guard = defer([=] { fclose(handle); });
     template <typename Fn>
     class Defer {
     public:

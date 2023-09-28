@@ -15,7 +15,6 @@
 #include "os/crash_handler.h"
 
 #include "util/algorithm.h"
-#include "util/atomic.h"
 #include "util/defer.h"
 #include "util/filesystem.h"
 #include "util/flat_map.h"

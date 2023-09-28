@@ -42,7 +42,7 @@ namespace glarses {
 		const std::vector<t_Value>& get_values() const noexcept;
 
 		template <typename t_Callback> // void(const t_Key&, t_Value&)
-		void foreach(t_Callback fn) const;
+		void foreach(t_Callback fn);
 
 		friend std::ostream& operator << (std::ostream& os, const FlatMap& fm);
 

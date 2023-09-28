@@ -1,29 +1,31 @@
 add_library(glarses_lib
-            "glarses.cpp"
+			"glarses.cpp"
 
-            "dependencies.cpp"
-            "application.cpp"
+			"dependencies.cpp"
+			"application.cpp"
 
-            "core/system.cpp"
-            "core/engine.cpp"
+			"core/system.cpp"
+			"core/engine.cpp"
 
-            "io/file.cpp"
-            "io/bitmap.cpp"
+			"io/file.cpp"
+			"io/bitmap.cpp"
 
-            "log/log_category.cpp"
-            "log/log_message.cpp"
-            "log/log_sink.cpp"
-            "log/logger.cpp"
+			"log/log_category.cpp"
+			"log/log_message.cpp"
+			"log/log_sink.cpp"
+			"log/logger.cpp"
 
-            "os/window.cpp"
-            "os/crash_handler_windows.cpp"
+			"os/window.cpp"
+			"os/crash_handler_windows.cpp"
 
-            "util/atomic.cpp"
-            "util/string_util.cpp"
-            "util/filesystem.cpp"
-            util/timing_windows.cpp
-            util/process_windows.cpp
-            util/process.cpp
+			"util/string_util.cpp"
+			"util/filesystem.cpp"
+			"util/timing_windows.cpp"
+			"util/process_windows.cpp"
+			"util/process.cpp"
+			os/dynamic_library_windows.cpp
+			core/module.cpp
+			io/search_paths.cpp
 )
 
 # package-based dependencies (vcpkg)
@@ -61,6 +63,8 @@ if (WIN32)
 	if (ENABLE_VALIDATION)
 		add_definitions(-DENABLE_VALIDATION)
 	endif()
+
+	target_compile_options(glarses_lib PUBLIC /MD$<$<CONFIG:Debug>:d>)
 endif()
 
 target_link_libraries(glarses_lib PUBLIC 

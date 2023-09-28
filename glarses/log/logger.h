@@ -31,11 +31,13 @@ namespace glarses::log {
         ) noexcept;
 
     private:
-        std::vector<LogSink>          m_Sinks;
+        std::vector<LogSink> m_Sinks;
     };
 }
 
 // macros to make it as painless as possible to log something
+// (it's possible to use default arguments to avoid macros entirely, but that would make calling the function
+//  slightly less ergonomic...)
 #define g_LogCategory(category) \
 	(::glarses::log::Logger::instance()(::glarses::log::e_LogCategory::category, std::source_location::current()))
 
