@@ -123,4 +123,22 @@ namespace glarses {
 	) {
 		return concat(split(haystack, needle), replacement);
 	}
+
+    std::wstring to_wide_string(const std::string& src) {
+        std::wstring result;
+        result.resize(src.size());
+
+        // for ASCII this is fine; non-ascii will be converted to '?'
+        // (those values would show negative values as characters)
+        for (size_t i = 0; i < src.size(); ++i) {
+            auto c = src[i];
+
+            if (c >= 0)
+                result[i] = static_cast<wchar_t>(c);
+            else
+                result[i] = L'?';
+        }
+
+        return result;
+    }
 }

@@ -1,31 +1,32 @@
 add_library(glarses_lib
-			"glarses.cpp"
+            "glarses.cpp"
 
-			"dependencies.cpp"
-			"application.cpp"
+            "dependencies.cpp"
+            "application.cpp"
 
-			"core/system.cpp"
-			"core/engine.cpp"
+            "core/system.cpp"
+            "core/engine.cpp"
+			"core/module.cpp"
 
-			"io/file.cpp"
-			"io/bitmap.cpp"
+            "io/file.cpp"
+            "io/bitmap.cpp"
+			"io/search_paths.cpp"
 
-			"log/log_category.cpp"
-			"log/log_message.cpp"
-			"log/log_sink.cpp"
-			"log/logger.cpp"
+            "log/log_category.cpp"
+            "log/log_message.cpp"
+            "log/log_sink.cpp"
+            "log/logger.cpp"
 
-			"os/window.cpp"
-			"os/crash_handler_windows.cpp"
+            "os/window.cpp"
+            "os/crash_handler_windows.cpp"
+			"os/dynamic_library_windows.cpp"
 
-			"util/string_util.cpp"
-			"util/filesystem.cpp"
-			"util/timing_windows.cpp"
-			"util/process_windows.cpp"
-			"util/process.cpp"
-			os/dynamic_library_windows.cpp
-			core/module.cpp
-			io/search_paths.cpp
+            "util/string_util.cpp"
+            "util/filesystem.cpp"
+            "util/timing_windows.cpp"
+            "util/process_windows.cpp"
+            "util/process.cpp"
+			"util/named_thread.cpp"
 )
 
 # package-based dependencies (vcpkg)

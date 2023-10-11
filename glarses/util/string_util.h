@@ -11,7 +11,6 @@ namespace glarses {
 	[[nodiscard]] std::vector<std::string> split(std::string_view haystack, const Ts&... needles);
 	[[nodiscard]] std::vector<std::string> split_string(std::string_view haystack, std::string_view needle);
 
-
 	// NOTE these only do ASCII-style upper/lower casing. Full Unicode support is too complex for this project
 	[[nodiscard]] std::string to_lower(std::string_view sv) noexcept;
 	[[nodiscard]] std::string to_upper(std::string_view sv) noexcept;
@@ -47,6 +46,8 @@ namespace glarses {
 			std::string_view needle,
 			std::string_view replacement = ""
 	);
+
+    [[nodiscard]] std::wstring to_wide_string(const std::string& src); // NOTE -- assuming ASCII here
 }
 
 #include "string_util.inl"
