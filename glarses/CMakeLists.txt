@@ -1,32 +1,34 @@
 add_library(glarses_lib
-            "glarses.cpp"
+			"glarses.cpp"
 
-            "dependencies.cpp"
-            "application.cpp"
+			"dependencies.cpp"
+			"application.cpp"
 
-            "core/system.cpp"
-            "core/engine.cpp"
+			"core/system.cpp"
+			"core/engine.cpp"
 			"core/module.cpp"
 
-            "io/file.cpp"
-            "io/bitmap.cpp"
+			"io/file.cpp"
+			"io/bitmap.cpp"
 			"io/search_paths.cpp"
 
-            "log/log_category.cpp"
-            "log/log_message.cpp"
-            "log/log_sink.cpp"
-            "log/logger.cpp"
+			"log/log_category.cpp"
+			"log/log_message.cpp"
+			"log/log_sink.cpp"
+			"log/logger.cpp"
 
-            "os/window.cpp"
-            "os/crash_handler_windows.cpp"
+			"os/window.cpp"
+			"os/crash_handler_windows.cpp"
 			"os/dynamic_library_windows.cpp"
 
-            "util/string_util.cpp"
-            "util/filesystem.cpp"
-            "util/timing_windows.cpp"
-            "util/process_windows.cpp"
-            "util/process.cpp"
+			"util/string_util.cpp"
+			"util/filesystem.cpp"
+			"util/timing_windows.cpp"
+			"util/process_windows.cpp"
+			"util/process.cpp"
 			"util/named_thread.cpp"
+			"util/spin_lock.cpp"
+			util/coro/coro_functor.cpp
 )
 
 # package-based dependencies (vcpkg)
@@ -40,7 +42,6 @@ find_package(unofficial-concurrentqueue CONFIG REQUIRED)
 
 find_path(VULKAN_INCLUDE vulkan/vulkan.h PATH "$ENV{VULKAN_SDK}/include")
 find_path(RANG_INCLUDE_DIRS "rang.hpp")
-find_path(PARALLEL_HASHMAP_INCLUDE_DIRS "parallel_hashmap/btree.h")
 
 # Manually add the Tilt5 NDK to the project, as well as header-only library paths
 target_include_directories(glarses_lib PUBLIC 
@@ -48,7 +49,6 @@ target_include_directories(glarses_lib PUBLIC
 	${Stb_INCLUDE_DIR}
 	${VULKAN_INCLUDE}
 	${RANG_INCLUDE_DIRS}
-	${PARALLEL_HASHMAP_INCLUDE_DIRS}
 )
 
 add_library(TiltFiveNative SHARED IMPORTED)

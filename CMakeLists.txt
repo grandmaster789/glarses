@@ -10,7 +10,7 @@ list(APPEND VCPKG_MANIFEST_FEATURES "tests")
 
 # package manager
 #run_vcpkg()                 # install system-wide vcpkg dependencies: - should be called before defining project()
-set(VCPKG_VERSION latest)    # use 'edge' for bleeding edge, 'latest' for latest release, or a release tag for a specific (pinned) version
+set(VCPKG_VERSION edge)    # use 'edge' for bleeding edge, 'latest' for latest release, or a release tag for a specific (pinned) version
 include(cmake/vcpkg.cmake)   # download + bootstrap + dependency management
 
 # Set the project name and language
